@@ -367,7 +367,7 @@ namespace Screw.Manager
                 LastErrorCode = ErrorCodes.EntityCreateError;
                 return false;
             }
-
+             
             return true;
         }
     }
