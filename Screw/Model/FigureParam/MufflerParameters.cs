@@ -2,18 +2,16 @@
 using Kompas6Constants3D;
 using Screw.Model.Point;
 using Screw.Model.FigureParam;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Screw.Model.Entity;
+using Screw.Error;
+using Screw.Validator;
 
 namespace Screw.Model.FigureParam
 {
     /// <summary>
-	/// Struct of parameters of "Muffler" class.
-	/// </summary>
-	public struct MufflerParameters
+    /// Struct of parameters of "Muffler" class.
+    /// </summary>
+    public struct MufflerParameters
     {
         /// <summary>
         /// Part with detail in 3D document

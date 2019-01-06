@@ -1,12 +1,11 @@
-﻿using Kompas6API5;
-using Kompas6Constants3D;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Kompas6API5;
+using Kompas6Constants3D;
+using Screw.Validator;
 
-namespace Screw.Model.Entitty
+namespace Screw.Model.Entity
 {
     static class KompasFaces
     {
@@ -63,9 +62,9 @@ namespace Screw.Model.Entitty
         /// <summary>
         /// Get cylinder base plane indexes by indexes of faces of cylinder inside detail faces collection
         /// </summary>
-        /// ksFaceDefinition.IsCylinder() defines is face cylindric or not,
-        /// it seems to be unlogical, but in any case: base planes are NOT cylindric,
-        /// they are just plane circles
+        /// ksFaceDefinition.IsCylinder () определяет, является ли грань цилиндрической или нет,
+        /// это кажется нелогичным, но в любом случае: базовые плоскости НЕ являются цилиндрическими,
+        /// они просто плоские круги
         /// <param name="_doc3DPart">Document 3D part, represents detail</param>
         /// <param name="startIndex">Start index of faces in faces collection</param>
         /// <param name="endIndex">End index of faces in faces collection</param>
@@ -73,7 +72,7 @@ namespace Screw.Model.Entitty
         /// <param name="outSecondIndex">Second base plane index</param>
         public static void GetCylinderBasePlaneIndexes(ksPart _doc3DPart, int startIndex, int endIndex, out int outFirstIndex, out int outSecondIndex)
         {
-            /* TODO: функция getCylinderBasePlane работает только, если базовая плоскость больше размером, чем получаемая */
+            /* функция getCylinderBasePlane работает только, если базовая плоскость больше размером, чем получаемая */
             var faceCollection = (ksEntityCollection)_doc3DPart.EntityCollection((short)Obj3dType.o3d_face);
 
             if (faceCollection == null
@@ -92,13 +91,13 @@ namespace Screw.Model.Entitty
 
             for (int i = startIndex - 1; i < endIndex; i++)
             {
-                uint ST_MIX_SM = 0x0;   // area in santimeters
+                uint ST_MIX_SM = 0x0;   //площадь в сантиметрах
                 var entity = (ksEntity)faceCollection.GetByIndex(i);
                 var def = (ksFaceDefinition)entity.GetDefinition();
 
-                var area = Math.Round(def.GetArea(ST_MIX_SM), 10);  // round to 10 numbers
+                var area = Math.Round(def.GetArea(ST_MIX_SM), 10);  //округлить до 10 чисел
 
-                // If face isn't cylindric and if it is not base face (see xml-comment to this function)
+                // Если грань не является цилиндрической, и если она не является базовой гранью
                 if (!def.IsCylinder() && isFirstIndexSet == false)
                 {
                     isFirstIndexSet = true;
@@ -117,18 +116,15 @@ namespace Screw.Model.Entitty
         }
 
         /// <summary>
-        /// Return face which is parallel to base face
+        /// Вернуть грань, параллельную базовой грани
         /// </summary>
-        /// This algorithm uses areas of faces collection 
-        /// in diapason from start index to end index.
-        /// The essence of the algorithm is that any extruded figure
-        /// has parralel top and bottom planes and sides planes,
-        /// and areas of these planes are equal as side planes!
-        /// But all these planes are sorted randomly.
-        /// If we add any figure to bottom plane
-        /// (i.e. create sketch and extrude him on bottom plane)
-        /// then area of bottom plane decreases
-        /// and we can exactly say which index belongs to each parralel plane!
+        /// Этот алгоритм использует области сбора граней в диапазоне от начального индекса до конечного индекса. 
+        /// Суть алгоритма заключается в том, что любая вытянутая фигура
+        /// имеет верхнюю и нижнюю плоскости и параллельные плоскости, и области этих плоскостей равны боковым плоскостям!
+        /// Но все отсортированы случайным образом.
+        /// Если мы добавим любую фигуру в нижнюю плоскость
+        /// (т.е.создать эскиз и выдавить его на нижнюю плоскость), тогда площадь нижней плоскости уменьшается, 
+        /// и мы можем точно сказать, какой индекс принадлежит каждой плоскости
         /// <param name="_doc3DPart">Kompas part of 3D document</param>
         /// <param name="startIndex">Face collection start index</param>
         /// <param name="endIndex">Face collection end index</param>
@@ -136,7 +132,6 @@ namespace Screw.Model.Entitty
         /// <param name="outSecondIndex">Second base plane index in faces collection</param>
         public static void GetRegPolyBasePlanesIndexes(ksPart _doc3DPart, int startIndex, int endIndex, out int outFirstIndex, out int outSecondIndex)
         {
-            /*	TODO: эта функция работает только с многоугольниками с количеством граней строго больше 4 */
             // Collection of entities in all figure
             var faceCollection = (ksEntityCollection)_doc3DPart.EntityCollection((short)Obj3dType.o3d_face);
 
@@ -160,7 +155,7 @@ namespace Screw.Model.Entitty
             // Set figure faces areas list with all areas
             for (int i = startIndex - 1; i < endIndex; i++)
             {
-                uint ST_MIX_SM = 0x0;   // this is similar to "area in santimeters" definition in API
+                uint ST_MIX_SM = 0x0;   //это похоже на определение "области в сантиметрах" в API
                 var entity = (ksEntity)faceCollection.GetByIndex(i);
 
                 var def = (ksFaceDefinition)entity.GetDefinition();
@@ -171,20 +166,20 @@ namespace Screw.Model.Entitty
                 unroundedList.Add(area);
             }
 
-            // Get minimal epsilon for all unrounded areas (see comment to this function)
+            // Get minimal epsilon for all unrounded areas
             var minimalEpsilon = GetMinimalEspilonOfAreas(unroundedList);
 
-            // Set init list with rounded values
+            // Установить список инициализации с округленными значениями
             for (int i = 0, length = unroundedList.Count; i < length; i++)
             {
                 initList.Add(Math.Round(unroundedList[i], minimalEpsilon));
             }
 
-            // Get unique areas in this list
+            // Получить уникальные области в списке
             for (int i = 0, length = initList.Count; i < length; i++)
             {
-                // If value is not set neither in unique nor in non-unique list --
-                // -- then set him to unique list
+                // if значение не задано ни в уникальном, ни в неуникальном списке -
+                // else установить его в уникальный список
                 if (!uniqList.Contains(initList[i]))
                 {
                     if (!notUniqList.Contains(initList[i]))
@@ -194,28 +189,28 @@ namespace Screw.Model.Entitty
                 }
                 else
                 {
-                    // Else if he already set in unique list -- 
-                    // -- delete from this list and set him to not-unique list, but only once
+                    // Else если он уже указан в уникальном списке -
+                    // -- удалить из этого списка и установить его в неуникальный список, но только один раз
                     uniqList.Remove(initList[i]);
                     notUniqList.Add(initList[i]);
                 }
             }
 
-            // Check this 2 indexes for adjacency with base face of figure
+            // Проверьте эти 2 индекса на смежность с базовой гранью фигуры
             if (uniqList.Count == 2)
             {
                 firstIndex += initList.IndexOf(uniqList[0]);
                 secondIndex += initList.IndexOf(uniqList[1]);
             }
-            // Else if main base face area is higher than parallel base face area
-            // -- then return only first index
+            // Else если площадь основной базовой поверхности выше, чем площадь параллельной базовой поверхности
+            // -- затем вернуть только первый индекс
             else if (uniqList.Count == 1)
             {
                 firstIndex += initList.IndexOf(uniqList[0]);
                 secondIndex = -1;
             }
-            // Else if parallel faces doesn't have the same area --
-            // -- then get value which repeat twice in array
+            // Else если параллельные грани не имеют одинаковую площадь --
+            // -- затем получить значение, которое повторяется дважды в массиве
             else if (uniqList.Count == 0)
             {
                 bool getFirstElement = false;
@@ -236,7 +231,7 @@ namespace Screw.Model.Entitty
                     }
                 }
             }
-            // Else try to do facepalm and exit immediately
+            
             else
             {
                 firstIndex = secondIndex = -1;
@@ -277,17 +272,17 @@ namespace Screw.Model.Entitty
         /// <returns></returns>
         private static int GetEpsilonOfArea(double area)
         {
-            // This is optimal epsilon by my countings,
-            // works for all areas without any division remainders on mantissa.
+            // This is optimal epsilon,
+            // works for all areas without
             var epsilon = 13;
 
-            // If area is higher then 1 --
-            // -- then just round logarithm of area
+            // If площадь выше 1--
+            // -- тогда просто круглый логарифм площади
             if (area > 1)
             {
                 return epsilon - (int)Math.Floor(Math.Log10(area)) - 1;
             }
-            // Else count amount of zeros after comma
+            // Else посчитать количество нулей после запятой
             else if (area < 1)
             {
                 var decimals = 0;
@@ -306,7 +301,11 @@ namespace Screw.Model.Entitty
             }
         }
 
-        /// </example>
+        /// <summary>
+        /// Получить базовую плоскость, параллельную _основной базовой плоскости.
+        /// Разница между этими плоскостями заключается в том, что базовая плоскость _main_ является выдавливаемой сущностью,
+        /// а базовая плоскость _parallel_ выдавленной вытянутой сущностью.
+        /// </summary>
         /// <param name="_doc3DPart">Kompas part of 3D document</param>
         /// <param name="faceIndex1">Base plane index 1</param>
         /// <param name="faceIndex2">Base plane index 2</param>
@@ -314,9 +313,7 @@ namespace Screw.Model.Entitty
         /// <returns>Parallel base plane by base plane area state and indexes of faces in detail faces collection</returns>
         public static ksEntity GetParallelBasePlane(ksPart _doc3DPart, int faceIndex1, int faceIndex2, BaseFaceAreaState baseFaceAreaState)
         {
-            // If first index isn't defined --
-            // -- then just open this and enjoy
-
+            // If первый индекс не определен --
             if (faceIndex1 == -1)
             {
                 return null;
@@ -327,8 +324,8 @@ namespace Screw.Model.Entitty
             var face1 = (ksEntity)faceCollection.GetByIndex(faceIndex1);
             var faceDefinition1 = (ksFaceDefinition)face1.GetDefinition();
 
-            // If second base face index isn't defined --
-            // -- then get first base face
+            // If второй базовый индекс face не определен --
+            // -- затем получите первое базовое face
             if (faceIndex2 == -1)
             {
                 return face1;
@@ -339,7 +336,7 @@ namespace Screw.Model.Entitty
 
             var face = (ksEntity)faceCollection.GetByIndex(0);
 
-            uint SM = 0x0; // this is similar to "area in santimeters" in API
+            uint SM = 0x0; // это похоже на "площадь в сантиметрах" в API
 
             switch (baseFaceAreaState)
             {
@@ -369,7 +366,37 @@ namespace Screw.Model.Entitty
         }
 
         /// <summary>
-        /// Get elements count in list
+        /// Draws the word "XYZ" on plane. 
+        /// Эта функция используется для отладки других функций
+        /// которые работают с эскизами.
+        /// </summary>
+        /// <param name="_doc3DPart">Kompas part of 3D document</param>
+        /// <param name="plane">Selected plane</param>
+        public static void DrawXyzOnPlane(ksPart _doc3DPart, ksEntity plane)
+        {
+            var xyz = new KompasSketch(_doc3DPart, plane);
+
+            var xyzEdit = xyz.BeginEntityEdit();
+
+            // Draw X
+            xyzEdit.ksLineSeg(0, 0, -5, -10, 1);        // "/"
+            xyzEdit.ksLineSeg(0, -10, -5, 0, 1);        // "\"
+
+            // Draw Y
+            xyzEdit.ksLineSeg(-7, 0, -13, -10, 1);      // "/"
+            xyzEdit.ksLineSeg(-7, -10, -10, -5, 1);     // верхняя половина "\"
+
+            // Draw Z
+            xyzEdit.ksLineSeg(-15, -10, -20, -10, 1);   // верх "--"
+            xyzEdit.ksLineSeg(-20, -10, -15, 0, 1);     // "/"
+            xyzEdit.ksLineSeg(-15, 0, -20, 0, 1);       // низ "--"
+
+            xyz.EndEntityEdit();
+        }
+
+
+        /// <summary>
+        ///Получить количество элементов в списке
         /// </summary>
         /// <param name="list">List of doubles</param>
         /// <param name="findElement">Element to find</param>
@@ -387,4 +414,3 @@ namespace Screw.Model.Entitty
         }
     }
 }
-    

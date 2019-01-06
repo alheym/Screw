@@ -1,182 +1,194 @@
-﻿using Kompas6API5;
-using Kompas6Constants3D;
-using Screw.Error;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using Kompas6API5;
+using Kompas6Constants3D;
+using Kompas6Constants;
+using Screw;
+using Screw.Error;
+using Screw.Validator;
 
-namespace Screw.Manager
-
-{   /// <summary>
+namespace Screw
+{
+    /// <summary>
     /// Kompas application manager class
     /// </summary>
     public class KompasApplication
     {
-        
-
-            /// <summary>
-            /// Get Kompas 3D object
-            /// </summary>
-            public KompasObject KompasObject
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// 3D document сборки
-            /// </summary>
-            public ksDocument3D Document3D
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Screw part of build
-            /// </summary>
-            public ksPart ScrewPart
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Шаг резьбы
-            /// </summary>
-            public double ThreadStep
-            {
-                get;
-                set;
-            }
-
-            /// <summary>
-            /// Параметры фигуры
-            /// </summary>
-            public List<double> Parameters
-            {
-                get;
-                set;
-            }
-
-            /// <summary>
-            /// Код последней ошибки
-            /// </summary>
-            public Error.ErrorCodes LastErrorCode
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Create object of application
-            /// </summary>
-            public KompasApplication()
-            {
-                if (!GetActiveApp())
-                {
-                    if (!CreateNewApp())
-                    {
-                        return;
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Create 3D document
-            /// </summary>
-            /// <returns>true - если операция прошла успешно; false - в случае ошибки</returns>
-            public bool CreateDocument3D()
-            {
-                Document3D = (ksDocument3D)KompasObject.Document3D();
-
-                // Create build
-                if (!Document3D.Create(false/*visible*/, false/*build*/))
-                {
-                    LastErrorCode = ErrorCodes.Document3DCreateError;
-                    return false;
-                }
-
-                // Create screw detail on 3D document
-                ScrewPart = (ksPart)Document3D.GetPart((short)Part_Type.pTop_Part);
-
-                if (ScrewPart == null)
-                {
-                    LastErrorCode = ErrorCodes.Document3DGetPartError;
-                    return false;
-                }
-
-                return true;
-            }
+        /// <summary>
+        /// Get Kompas 3D object
+        /// </summary>
+        public KompasObject KompasObject
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
-        /// Подключиться к активнопу приложению Компас
+        /// 3D document of build
         /// </summary>
-        /// <returns>true - если операция прошла успешно; false - в случае ошибки</returns>
+        public ksDocument3D Document3D
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Screw part of build
+        /// </summary>
+        public ksPart ScrewPart
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Nut part of build
+        /// </summary>
+        public ksPart NutPart
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Step of thread of figures in build
+        /// </summary>
+        public double ThreadStep
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Parameters of figures in build
+        /// </summary>
+        public List<double> Parameters
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Last error code
+        /// </summary>
+        public ErrorCodes LastErrorCode
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Create object of application
+        /// </summary>
+        public KompasApplication()
+        {
+            if (!GetActiveApp())
+            {
+                if (!CreateNewApp())
+                {
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create 3D document
+        /// </summary>
+        /// <returns>true if operation successful; false in case of error</returns>
+        public bool CreateDocument3D()
+        {
+            Document3D = (ksDocument3D)KompasObject.Document3D();
+
+            // Create build
+            if (!Document3D.Create(false/*visible*/, false/*build*/))
+            {
+                LastErrorCode = ErrorCodes.Document3DCreateError;
+                return false;
+            }
+
+            // Create screw detail on 3D document
+            ScrewPart = (ksPart)Document3D.GetPart((short)Part_Type.pTop_Part);
+
+            // Create nut detail on 3D document
+            NutPart = (ksPart)Document3D.GetPart((short)Part_Type.pTop_Part);
+
+            if (ScrewPart == null
+                || NutPart == null
+            )
+            {
+                LastErrorCode = ErrorCodes.Document3DGetPartError;
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get already active Kompas application
+        /// </summary>
+        /// <returns>true if operation successful, false in case of error</returns>
         private bool GetActiveApp()
+        {
+            // Try to get an active app
+            if (KompasObject == null)
             {
-                // Try приложение активно
-                if (KompasObject == null)
+                try
                 {
-                    try
-                    {
-                        KompasObject = (KompasObject)Marshal.GetActiveObject("KOMPAS.Application.5");
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    KompasObject = (KompasObject)Marshal.GetActiveObject("KOMPAS.Application.5");
                 }
-
-                // Else приложение не запущено -- return
-                if (KompasObject == null)
+                catch
                 {
                     return false;
                 }
-
-                KompasObject.Visible = true;
-                KompasObject.ActivateControllerAPI();
-
-                return true;
             }
+
+            // Else application not loaded -- return
+            if (KompasObject == null)
+            {
+                return false;
+            }
+
+            KompasObject.Visible = true;
+            KompasObject.ActivateControllerAPI();
+
+            return true;
+        }
 
         /// <summary>
-        /// Запуск приложения Компас
+        /// Create new Kompas application
         /// </summary>
-        /// <returns>true - если операция прошла успешно; false - в случае ошибки</returns>
+        /// <returns>true if operation successful, false in case of error</returns>
         private bool CreateNewApp()
+        {
+            Type t = Type.GetTypeFromProgID("KOMPAS.Application.5");
+            KompasObject = (KompasObject)Activator.CreateInstance(t);
+
+            if (KompasObject == null)
             {
-                Type t = Type.GetTypeFromProgID("KOMPAS.Application.5");
-                KompasObject = (KompasObject)Activator.CreateInstance(t);
-
-                if (KompasObject == null)
-                {
-                    LastErrorCode = ErrorCodes.KompasApplicationCreatingError;
-                    return false;
-                }
-
-                KompasObject.Visible = true;
-                KompasObject.ActivateControllerAPI();
-
-                return true;
+                LastErrorCode = ErrorCodes.KompasApplicationCreatingError;
+                return false;
             }
 
-            /// <summary>
-            /// Закрыть программу
-            /// </summary>
-            public void DestructApp()
-            {
-                KompasObject.Quit();
-                KompasObject = null;
+            KompasObject.Visible = true;
+            KompasObject.ActivateControllerAPI();
 
-                Document3D = null;
-                ScrewPart = null;
+            return true;
+        }
 
-                LastErrorCode = ErrorCodes.OK;
-            }
+        /// <summary>
+        /// Unset object of program
+        /// </summary>
+        public void DestructApp()
+        {
+            KompasObject.Quit();
+            KompasObject = null;
+
+            Document3D = null;
+            ScrewPart = null;
+            NutPart = null;
+
+            LastErrorCode = ErrorCodes.OK;
+        }
     }
 }
-

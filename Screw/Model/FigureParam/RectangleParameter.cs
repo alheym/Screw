@@ -1,14 +1,8 @@
 ﻿using Kompas6API5;
 using Kompas6Constants;
-using Screw.Error;
-using Screw.Manager;
 using Screw.Model.Point;
+using Screw.Error;
 using Screw.Validator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Screw.Model.FigureParam
 {
@@ -16,8 +10,13 @@ namespace Screw.Model.FigureParam
     /// Rectangle parameter.
     /// Represents parameters of rectangle of 2D document.
     /// </summary>
-    class RectangleParameter
+    public class RectangleParameter
     {
+        /// <summary>
+        /// Kompas application
+        /// </summary>
+        private KompasApplication _kompasApp;
+
         /// <summary>
         /// Rectangle parameters
         /// </summary>
@@ -73,13 +72,16 @@ namespace Screw.Model.FigureParam
                 return;
             }
 
+
             ksRectangleParam rectangleParam;
+
             rectangleParam = kompasApp.KompasObject.GetParamStruct((short)StructType2DEnum.ko_RectangleParam);
             rectangleParam.width = width;
             rectangleParam.height = height;
             rectangleParam.ang = 0;
             rectangleParam.style = 1;           // Line style
-            rectangleParam.x = point2D.X; rectangleParam.y = point2D.Y;
+            rectangleParam.x = point2D.X;
+            rectangleParam.y = point2D.Y;
 
             if (rectangleParam == null)
             {

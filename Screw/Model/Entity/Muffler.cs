@@ -1,14 +1,13 @@
-﻿using Kompas6Constants3D;
-using Screw.Error;
-using Screw.Manager;
+﻿using Kompas6API5;
+using Kompas6Constants3D;
+using Screw.Model.Point;
 using Screw.Model.FigureParam;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Screw.Model.Entity;
+using Screw.Error;
+using Screw.Validator;
+using Screw;
 
-namespace Screw.Model.Entitty
+namespace Screw.Model.Entity
 {
     class Muffler
     {
@@ -41,7 +40,7 @@ namespace Screw.Model.Entitty
         }
 
         /// <summary>
-        /// Muffler manager constructor
+        /// Конструктор глушителя
         /// </summary>
         /// <param name="figureParameters">Parameters of muffler</param>
         /// <param name="kompasApp">Kompas application specimen</param>
@@ -79,25 +78,20 @@ namespace Screw.Model.Entitty
             }
         }
 
-        public Muffler(KompasApplication kompasApp, MufflerParameters mufflerParameters)
-        {
-            _kompasApp = kompasApp;
-        }
-
         /// <summary>
-        /// Create muffler in detail in base plane axis
+        /// Создать глушитель оси базовой плоскости
         /// </summary>
         /// <param name="figureParameters">Parameters of muffler</param>
         /// <param name="basePlane">Base plane of muffler, by default is null</param>
-        /// <returns>Muffler extrusion or null if extrusion returns error</returns>
+        /// <returns>Выдавливание глушителя или ноль, если выдавливание возвращает ошибку</returns>
         private KompasExtrusion CreateMuffler(MufflerParameters figureParameters, ksEntity basePlane = null)
         {
             // Muffler sketch
             var muffler = new KompasSketch(figureParameters.Document3DPart, figureParameters.BasePlaneAxis);
 
-            // If base plane is set --
-            // -- create sketch of muffler on it 
-            // instead of base plane axis
+            // If базовая плоскость установлена --
+            // -- создать эскиз глушителя на нем
+            // вместо оси базовой плоскости
             if (basePlane != null)
             {
                 muffler = new KompasSketch(figureParameters.Document3DPart, basePlane);
@@ -115,7 +109,7 @@ namespace Screw.Model.Entitty
                 return null;
             }
 
-            // Muffler rectangle, width and height are screw hat width
+            // Глушитель прямоугольник, ширина и высота диаметр шляпки
             var mufflerRectangleParam = new RectangleParameter(_kompasApp, _kompasApp.Parameters[0], _kompasApp.Parameters[0], figureParameters.BasePlanePoint);
             if (mufflerSketchEdit.ksRectangle(mufflerRectangleParam.FigureParam) == 0)
             {
@@ -125,7 +119,7 @@ namespace Screw.Model.Entitty
 
             muffler.EndEntityEdit();
 
-            // Muffler extrusion, height of muffler is nut height / 4
+            // Выдавливание глушителя, высота глушителя высота шляпки / 4
             var extrusionParameters = new KompasExtrusionParameters(figureParameters.Document3DPart, Obj3dType.o3d_baseExtrusion, muffler.Entity, figureParameters.Direction, _kompasApp.Parameters[4] / 4.0);
             var mufflerExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity);
 
@@ -139,7 +133,7 @@ namespace Screw.Model.Entitty
         }
 
         /// <summary>
-        /// Delete muffler from document 3D part
+        /// Удалить глушитель из 3D детали документа
         /// </summary>
         public bool DeleteDetail()
         {
@@ -149,7 +143,7 @@ namespace Screw.Model.Entitty
                 return false;
             }
 
-            // Muffler deletion
+            // Удаление глушителя
             Extrusion.BaseFaceAreaState = KompasFaces.BaseFaceAreaState.BaseFaceAreaLower;
             var extruded = Extrusion.ExtrudedEntity;
             if (extruded == null)

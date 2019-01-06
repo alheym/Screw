@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using Screw.Error;
 
 namespace Screw.Validator
 {
     /// <summary>
-	/// Validator of parameters of figures of build
-	/// </summary>
-	class FigureParametersValidator : IValidator
+    /// Validator of parameters of figures of build
+    /// </summary>
+    class FigureParametersValidator : IValidator
     {
         /*	Elements of chain: 
 			ScrewHatWidth			- W3
@@ -68,15 +66,15 @@ namespace Screw.Validator
         /// Validate all chain by set of rules
         /// </summary>
         /// Every property must be checked by set of checking rules:
-        ///	a) 0.8 W3 <= d <= 0.96 W3
-        ///	b) 0.6 W3 <= D <= 0.8 W3
+        ///	a) H <= m
+        ///	b) l + b <= H
         ///	c) H1' >= 0.55 W3
-        ///	d) 0.1 W1+W2 <= H1' <= 0.15 W1+W2
-        /// e) d > D
+        ///	d) D <= n
+        /// e) b <= l
         /// <returns>true if validation successful; false if error is caused while validation</returns>
         public bool Validate()
         {
-            var screwHatHeight = _figureParameters[4]; // screw hat height is equal to nut height
+            var screwHatHeight = _figureParameters[4]; 
             var screwBaseWidth = _figureParameters[2] + _figureParameters[3];   // W1 + W2
 
             var diapasonStart = default(double);
@@ -85,48 +83,35 @@ namespace Screw.Validator
 
             if (!ValidateDoubles()) return false;
 
-            // a) 0.8 W3 <= d <= 0.96 W3
-            if (!((0.8 * _figureParameters[0] <= _figureParameters[1]) && (_figureParameters[1] <= 0.96 * _figureParameters[0])))
+            // a) H <= m
+            if (!( _figureParameters[1]<=screwHatHeight))
             {
-                diapasonStart = 0.8 * _figureParameters[0];
-                diapasonEnd = 0.96 * _figureParameters[0];
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "0.8 W3 <= d <= 0.96 W3 \n(for your parameters: {0:####.##} <= d <= {1:####.##})", diapasonStart, diapasonEnd);
+                diapasonStart = screwHatHeight;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение глубины шлица m не может быть больше или равно значению высоты шляпки H", diapasonStart);
+                ErrorList.Add(errorMessage);
+            }
+            // b) l + b <= H 
+            if ((screwBaseWidth <= screwHatHeight))
+            {
+                diapasonStart = screwBaseWidth;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение параметра H не может быть больше чем l + b", diapasonStart);
+                errorMessage += "\n(Этот параметр зависит от l и b)";
                 ErrorList.Add(errorMessage);
             }
 
-            // b) 0.6 W3 <= D <= 0.8 W3
-            if (!((0.6 * _figureParameters[0] <= _figureParameters[5]) && (_figureParameters[5] <= 0.8 * _figureParameters[0])))
+            // c) D <= n
+            if (_figureParameters[0] <= _figureParameters[5])
             {
-                diapasonStart = 0.6 * _figureParameters[0];
-                diapasonEnd = 0.8 * _figureParameters[0];
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "0.6 W3 <= D <= 0.8 W3 \n(for your parameters: {0:####.##} <= D <= {1:####.##})", diapasonStart, diapasonEnd);
+                diapasonStart = _figureParameters[0];
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение ширины шлица n не может быть больше или равно диаметру шляпки D", diapasonStart);
                 ErrorList.Add(errorMessage);
             }
 
-            // d) 0.1 W1+W2 <= H <= 0.15 W1+W2 and H >= 0.55 W3
-            if (!((0.1 * screwBaseWidth <= screwHatHeight) && (screwHatHeight <= 0.15 * screwBaseWidth) && (screwHatHeight >= 0.55 * _figureParameters[0])))
+            // e) b <= l
+            if (!(_figureParameters[2] <= _figureParameters[3]))
             {
-                diapasonStart = 0.1 * screwBaseWidth;
-                diapasonEnd = 0.15 * screwBaseWidth;
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "0.1 W1+W2 <= H <= 0.15 W1+W2 and H >= 0.55 W3 \n(for your parameters: {0:####.##} <= H <= {1:####.##} and H >= {2:####.##})", diapasonStart, diapasonEnd, 0.55 * _figureParameters[0]);
-                errorMessage += "\n(this parameters depends on W1 and W2)";
-                ErrorList.Add(errorMessage);
-            }
-
-            // e) 0.1 W1+W2 <= W2
-            if (!((0.1 * screwBaseWidth <= _figureParameters[3])))
-            {
-                diapasonStart = 0.1 * screwBaseWidth;
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "0.1 W1+W2 <= W2 \n(for your parameters: {0:####.##} <= W2)", diapasonStart);
-                ErrorList.Add(errorMessage);
-            }
-
-            // f) d > D
-            if (!(_figureParameters[1] > _figureParameters[5]))
-            {
-                diapasonStart = _figureParameters[1];
-                diapasonEnd = _figureParameters[5];
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "d > D \n(for your parameters: {0:####.##} > {1:####.##})", diapasonStart, diapasonEnd);
+                diapasonStart = _figureParameters[2];
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина гладкой части l больше/равна длины резьбы b \n(for your parameters: {0:####.##} => b", diapasonStart);
                 ErrorList.Add(errorMessage);
             }
 
@@ -134,26 +119,26 @@ namespace Screw.Validator
         }
 
         /// <summary>
-        /// Validate double values in figure parameters.
+        /// Проверка двойных значений в параметрах фигуры.
         /// </summary>
-        /// <returns>true if validation successful; false if error is caused while validation</returns>
+        /// <returns> true, если проверка прошла успешно; false, если при проверке возникла ошибка</returns>
         private bool ValidateDoubles()
         {
             foreach (double parameter in _figureParameters)
             {
                 if (parameter <= 0)
                 {
-                    ErrorList.Add("Parameter must not be less or equal to zero");
+                    ErrorList.Add("Параметр не может принимать значение 0");
                     return false;
                 }
                 if (parameter < 0.1)
                 {
-                    ErrorList.Add("Parameter must be greater than 0.1");
+                    ErrorList.Add("Параметр должен быть больше 0.1");
                     return false;
                 }
                 if (parameter >= 10000)
                 {
-                    ErrorList.Add("Parameter must be lower or equal to 10000");
+                    ErrorList.Add("Параметр должен быть меньше 10000");
                 }
                 if (!DoubleValidator.Validate(parameter))
                 {

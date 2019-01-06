@@ -1,19 +1,14 @@
 ﻿using Kompas6API5;
 using Kompas6Constants3D;
 using Screw.Error;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Screw.Model
+namespace Screw.Model.Entity
 {
     /// <summary>
-	/// Sketch class.
-	/// Represents sketch in 2D entity in detail.
-	/// </summary>
-	class KompasSketch
+    /// Sketch class.
+    /// Represents sketch in 2D entity in detail.
+    /// </summary>
+    class KompasSketch
     {
         /// <summary>
         /// Base plane fo sketch
@@ -58,7 +53,7 @@ namespace Screw.Model
         }
 
         /// <summary>
-        /// Create sketch by base plane
+        /// Создать эскиз по базовой плоскости
         /// </summary>
         /// <param name="doc3DPart">Document 3D part</param>
         /// <param name="basePlane">Base plane</param>
@@ -76,7 +71,7 @@ namespace Screw.Model
         }
 
         /// <summary>
-        /// Create sketch by base plane
+        /// Создать эскиз по базовой плоскости
         /// </summary>
         /// <param name="doc3DPart">Document 3D part</param>
         /// <param name="basePlaneAxis">Base plane axis</param>
@@ -97,13 +92,13 @@ namespace Screw.Model
                 return;
             }
 
-            _basePlaneAxis = basePlaneAxis;
+            _basePlaneAxis = basePlaneAxis; // ось базовой плоскости
 
             Entity = CreateEntity(doc3DPart);
         }
 
         /// <summary>
-        /// Begin entity edit
+        /// Начать редактирование объекта
         /// </summary>
         /// <returns>Kompas 2D document (editable sketch)</returns>
         public ksDocument2D BeginEntityEdit()
@@ -117,7 +112,7 @@ namespace Screw.Model
         }
 
         /// <summary>
-        /// End entity edit
+        /// Конец редактирования объекта
         /// </summary>
         public void EndEntityEdit()
         {
@@ -125,13 +120,13 @@ namespace Screw.Model
         }
 
         /// <summary>
-        /// Create entity by base plane
+        /// Создать объект по базовой плоскости
         /// </summary>
         /// <param name="doc3DPart">Part of 3D document (detail in build)</param>
         /// <returns>true if operation successful; false in case of error</returns>
         private ksEntity CreateEntity(ksPart doc3DPart)
         {
-            // Sketch
+            // эскиз
             var sketch = (ksEntity)doc3DPart.NewEntity((short)Obj3dType.o3d_sketch);
             if (sketch == null)
             {
@@ -139,7 +134,7 @@ namespace Screw.Model
                 return null;
             }
 
-            // Sketch definition
+            // Определение эскиза
             var sketchDef = (ksSketchDefinition)sketch.GetDefinition();
             if (sketchDef == null)
             {
@@ -147,7 +142,7 @@ namespace Screw.Model
                 return null;
             }
 
-            // Base plane for sketch
+            // Базовая плоскость для эскиза
             var basePlane = GetBasePlane(doc3DPart);
             if (basePlane == null)
             {
@@ -168,10 +163,10 @@ namespace Screw.Model
         }
 
         /// <summary>
-        /// Get base plane by axis or get already set base plane
+        /// Получить базовую плоскость по оси или получить уже установленную базовую плоскость
         /// </summary>
         /// <param name="doc3DPart">Part of 3D document (detail in build)</param>
-        /// <returns>Already set base plane or base plane by axis</returns>
+        /// <returns>Уже установлена ​​базовая плоскость или базовая плоскость по оси</returns>
         private ksEntity GetBasePlane(ksPart doc3DPart)
         {
             ksEntity basePlane = null;

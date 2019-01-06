@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Screw.Validator
+﻿namespace Screw.Validator
 {
     /// <summary>
-	/// Validator interface for classes which are validating parameters.
-	/// </summary>
-	interface IValidator
+    /// Validator interface for classes which are validating parameters.
+    /// </summary>
+    interface IValidator
     {
         /// <summary>
         /// Validate parameter

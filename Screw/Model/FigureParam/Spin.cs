@@ -1,20 +1,16 @@
 ﻿using Kompas6API5;
 using Kompas6Constants3D;
+using Screw.Model.Point;
 using Screw.Error;
 using Screw.Validator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Screw.Model.FigureParam
 {
     /// <summary>
-	/// Spin class.
-	/// Presents spin parameters of 2D document.
-	/// </summary>
-	class Spin
+    /// Spin class.
+    /// Presents spin parameters of 2D document.
+    /// </summary>
+    class Spin
     {
         /// <summary>
         /// Last error code
@@ -44,7 +40,7 @@ namespace Screw.Model.FigureParam
         }
 
         /// <summary>
-        /// Spin parameter by spin faces (begin and end), spin location point, diameter size and by spin step
+        /// Параметр вращения по граням вращения (начало и конец), точке расположения вращения, размеру диаметра и шагу вращения
         /// </summary>
         /// <param name="parameters">Parameters of spin</param>
         public Spin(SpinParameters parameters)
@@ -79,12 +75,12 @@ namespace Screw.Model.FigureParam
         }
 
         /// <summary>
-        /// Create spin definition by begin and end entity, diameter and spin height
+        /// Создание определения вращения по начальной и конечной сущности, диаметру и высоте вращения
         /// </summary>
         /// <param name="parameters">Spin parameters</param>
         private bool CreateSpin(SpinParameters parameters)
         {
-            // Create spin entity
+            // Создать сущность вращения
             var spin = (ksEntity)parameters.Document3DPart.NewEntity((short)Obj3dType.o3d_cylindricSpiral);
             if (spin == null)
             {
@@ -92,7 +88,7 @@ namespace Screw.Model.FigureParam
                 return false;
             }
 
-            // Create spin definition by spin entity
+            // Создание определения вращения по объекту вращения
             var spinDefinition = (ksCylindricSpiralDefinition)spin.GetDefinition();
             if (spinDefinition == null)
             {
@@ -100,19 +96,19 @@ namespace Screw.Model.FigureParam
                 return false;
             }
 
-            // Set base plane of spin
+            // Установить базовую плоскость вращения
             spinDefinition.SetPlane(parameters.BeginSpinFace);
 
-            spinDefinition.buildDir = true;                 // Normal spin build directory
-            spinDefinition.buildMode = 1;                   // Build by thread step and height
-            spinDefinition.diamType = 0;                    // Diameter by size
+            spinDefinition.buildDir = true;                 // Обычный каталог сборки вращения
+            spinDefinition.buildMode = 1;                   // Построить по шагу и высоте
+            spinDefinition.diamType = 0;                    // Диаметр по размеру
             spinDefinition.diam = parameters.DiameterSize;
-            spinDefinition.heightType = 1;                  // Height by object
+            spinDefinition.heightType = 1;                  // Высота по объекту
             spinDefinition.SetHeightObject(parameters.EndSpinFace);
-            spinDefinition.turnDir = true;                  // Clockwise direction
-            spinDefinition.step = parameters.SpinStep;      // Spin step
+            spinDefinition.turnDir = true;                  // Направление по часовой стрелке
+            spinDefinition.step = parameters.SpinStep;      // шаг спирали
 
-            // Create sketch on document
+            // Создать эскиз на документе
             if (!spinDefinition.SetLocation(parameters.SpinLocationPoint.X, parameters.SpinLocationPoint.Y)
                 || !spin.Create()
             )

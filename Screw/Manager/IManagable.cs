@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Screw.Manager
+﻿namespace Screw.Manager
 {
     /// <summary>
     /// Build manager interface
@@ -12,9 +6,9 @@ namespace Screw.Manager
     interface IManagable
     {
         /// <summary>
-        /// Создание детали в Компасе
+        /// Create detail in Kompas application
         /// </summary>
-        /// <returns>true - если операция прошла успешно, false - в случае ошибки</returns>
+        /// <returns>true if operation successful; false in case of error</returns>
         bool CreateDetail();
     }
 }

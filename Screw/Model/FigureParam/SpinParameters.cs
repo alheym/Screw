@@ -1,17 +1,15 @@
 ﻿using Kompas6API5;
+using Kompas6Constants3D;
 using Screw.Model.Point;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Screw.Error;
+using Screw.Validator;
 
 namespace Screw.Model.FigureParam
 {
     /// <summary>
-	/// Parameters for class  "Spin"
-	/// </summary>
-	public struct SpinParameters
+    /// Parameters for class  "Spin"
+    /// </summary>
+    public struct SpinParameters
     {
         /// <summary>
         /// Part of document with detail

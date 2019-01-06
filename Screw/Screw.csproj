@@ -54,6 +54,7 @@
     <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -65,23 +66,23 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Error\ErrorCatcher.cs" />
     <Compile Include="Error\ErrorCodes.cs" />
+    <Compile Include="Error\UserInputErrorCatcher.cs" />
     <Compile Include="Manager\BuildManager.cs" />
     <Compile Include="Manager\IManagable.cs" />
-    <Compile Include="Manager\ScrewManager.cs" />
     <Compile Include="Manager\KompasApplication.cs" />
-    <Compile Include="Manager\KompasObjectManager.cs" />
-    <Compile Include="Model\Entitty\KompasExtrusion.cs" />
-    <Compile Include="Model\Entitty\KompasFaces.cs" />
-    <Compile Include="Model\Entitty\KompasSketch.cs" />
-    <Compile Include="Model\Entitty\Muffler.cs" />
-    <Compile Include="Model\FigureParam\KompasExctrusionParameters.cs" />
+    <Compile Include="Manager\ScrewManager.cs" />
+    <Compile Include="Model\Entity\KompasExtrusion.cs" />
+    <Compile Include="Model\Entity\KompasFaces.cs" />
+    <Compile Include="Model\Entity\KompasSketch.cs" />
+    <Compile Include="Model\Entity\Muffler.cs" />
+    <Compile Include="Model\FigureParam\KompasExtrusionParameters.cs" />
     <Compile Include="Model\FigureParam\MufflerParameters.cs" />
     <Compile Include="Model\FigureParam\RectangleParameter.cs" />
-    <Compile Include="Model\FigureParam\RegularPolygonParameter.cs" />
     <Compile Include="Model\FigureParam\Spin.cs" />
     <Compile Include="Model\FigureParam\SpinParameters.cs" />
     <Compile Include="Model\Point\KompasPoint2D.cs" />
@@ -90,16 +91,16 @@
     <Compile Include="Validator\FigureParametersValidator.cs" />
     <Compile Include="Validator\IValidator.cs" />
     <Compile Include="Validator\UserInputValidation.cs" />
-    <Compile Include="View\MainForm.cs">
+    <Compile Include="View\ScrewView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <Compile Include="View\ScrewView.Designer.cs">
+      <DependentUpon>ScrewView.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="View\MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
+    <EmbeddedResource Include="View\ScrewView.resx">
+      <DependentUpon>ScrewView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

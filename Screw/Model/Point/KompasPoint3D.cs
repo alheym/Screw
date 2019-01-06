@@ -1,10 +1,5 @@
-﻿using Screw.Error;
-using Screw.Validator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Screw.Validator;
+using Screw.Error;
 
 namespace Screw.Model.Point
 {

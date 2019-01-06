@@ -1,18 +1,14 @@
-﻿using Screw.Error;
+﻿using System;
+using Screw.Error;
 using Screw.Validator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Screw.Model.Point
 {
     /// <summary>
-	/// Class KompasPoint2D.
-	/// Presents two-dimensional point with X and Y coordinates.
-	/// </summary>
-	public struct KompasPoint2D
+    /// Class KompasPoint2D.
+    /// Presents two-dimensional point with X and Y coordinates.
+    /// </summary>
+    public struct KompasPoint2D 
     {
         /// <summary>
         /// Last error code getter
@@ -63,5 +59,6 @@ namespace Screw.Model.Point
             X = xc;
             Y = yc;
         }
+
     }
 }

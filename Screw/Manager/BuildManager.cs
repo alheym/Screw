@@ -1,21 +1,28 @@
-﻿using Screw.Error;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Kompas6API5;
+using Kompas6Constants3D;
+using Kompas6Constants;
+using Screw.Model.Point;
+using Screw.Model.FigureParam;
+using Screw.Model.Entity;
+using Screw.Error;
+using Screw.Validator;
 
 namespace Screw.Manager
 {
-    class BuildManager
+    /// <summary>
+    /// Build manager.
+    /// Manages creation of build with screw and nut.
+    /// </summary>
+    public class BuildManager : IManagable
     {
         /// <summary>
-        /// экземпляр приложения Компас
+        /// Kompas application specimen
         /// </summary>
         private KompasApplication _kompasApp;
 
         /// <summary>
-        /// Код последей ошибки
+        /// Last error code
         /// </summary>
         public ErrorCodes LastErrorCode
         {
@@ -24,7 +31,7 @@ namespace Screw.Manager
         }
 
         /// <summary>
-        /// Конструктор BuildManager
+        /// Build Manager constructor
         /// </summary>
         public BuildManager(KompasApplication kompasApp)
         {
@@ -38,20 +45,22 @@ namespace Screw.Manager
         }
 
         /// <summary>
-        /// Создание тестовой фигуры
+        /// Create test figure
         /// </summary>
-        /// <returns>true - если операция прошла успешно, false - в случае ошибки</returns>
+        /// <returns>true if operation successful, false in case of error</returns>
         public bool CreateDetail()
         {
             if (!CreateScrew()) return false;
+
+            //if (!CreateNut()) return false;
 
             return true;
         }
 
         /// <summary>
-        /// Создание винта с шляпкой и основанием
+        /// Create screw with hat and base
         /// </summary>
-        /// <returns>true - если операция прошла успешно, false - в случае ошибки</returns>
+        /// <returns>true if operation successful; false in case of error</returns>
         private bool CreateScrew()
         {
             var screwManager = new ScrewManager(_kompasApp);

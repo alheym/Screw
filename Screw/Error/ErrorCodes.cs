@@ -1,69 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Screw.Error
+﻿namespace Screw.Error
 {
-   public enum ErrorCodes
+    public enum ErrorCodes
     {
         OK = 0,
-		
-		// Ошибки приложения Компаса и менеджера
-		KompasObjectCreatingError,
-		KompasApplicationCreatingError,
-		ManagerCreatingError,
 
-		// агрументы функции
-		ArgumentInvalid,
-		ArgumentNull,
+        // Kompas application and managers
+        KompasObjectCreatingError,
+        KompasApplicationCreatingError,
+        ManagerCreatingError,
 
-		//// Detail move errors
-		//PositionerPrepareError,
-		//PositionerFinishError,
-		//PositionerSetAxisError,
-		//PositionerSetBasePointError,
-		//PositionerSetDragPointError,
-		//PositionerMoveComponentError,
+        // Function arguments
+        ArgumentInvalid,
+        ArgumentNull,
 
-		// Ошибки построения 2D фигур
-		Document2DCircleCreatingError, // круг
-		Document2DRegPolyCreatingError, // многоугольник
-		Document2DRectangleCreateError, // прямоугольник
-		
-		// ошибки построения
-		Document3DGetPartError,
-		Document3DCreateError,
+        // Detail move errors
+        PositionerPrepareError,
+        PositionerFinishError,
+        PositionerSetAxisError,
+        PositionerSetBasePointError,
+        PositionerSetDragPointError,
+        PositionerMoveComponentError,
 
-		// элемент не установлен
-		KompasFigureNotSet,
-		EntityCreateError, // ошибка создания объекта
-		EntityCollectionCreateError, // ошибка создания коллекций сущностей
-		EntityDefinitionNull,
-		EntityNull,
-		EntityCollectionWrong,
+        // Document 2D
+        Document2DCircleCreatingError,
+        Document2DRegPolyCreatingError,
+        Document2DRectangleCreateError,
 
-		// Выдавливание
-		ExtrudableEntityNotSet,
-		ExtrusionEntityCreationError,
-		ExtrusionTypeCurrentlyNotSupported,
-		ExtrusionDirectionNotSupported,
-		ExtrusionFacesCountWrong,
-		ExtrusionSetLoftParamError,
-		ExtrusionSetSideParamError,
-		ExtrusionSetSketchError,
-		ExtrusionDepthNotSet,
-		ExtrudableEntityNull,
+        // Build manager errors
+        Document3DGetPartError,
+        Document3DCreateError,
 
-		// эскизы
-		ExtrusionSketchesNull,
-		ExtrusionSketchesNotSet,
-		ExtrusionSketchesMoreThanOne,
+        // Element not set
+        KompasFigureNotSet,
+        EntityCreateError,
+        EntityCollectionCreateError,
+        EntityDefinitionNull,
+        EntityNull,
+        EntityCollectionWrong,
 
-		// Validations
-		DoubleValueValidationError,
-		FigureParametersValidationError,
-		UserInputValidationError,
+        // Extrusions
+        ExtrudableEntityNotSet,
+        ExtrusionEntityCreationError,
+        ExtrusionTypeCurrentlyNotSupported,
+        ExtrusionDirectionNotSupported,
+        ExtrusionFacesCountWrong,
+        ExtrusionSetLoftParamError,
+        ExtrusionSetSideParamError,
+        ExtrusionSetSketchError,
+        ExtrusionDepthNotSet,
+        ExtrudableEntityNull,
+        // Sketches definitions
+        ExtrusionSketchesNull,
+        ExtrusionSketchesNotSet,
+        ExtrusionSketchesMoreThanOne,
+
+        // Validations
+        DoubleValueValidationError,
+        FigureParametersValidationError,
+        UserInputValidationError,
     }
 }

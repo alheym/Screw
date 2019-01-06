@@ -1,20 +1,16 @@
 ﻿using Kompas6API5;
 using Kompas6Constants3D;
 using Screw.Error;
+using Screw.Validator;
 using Screw.Model.FigureParam;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Screw.Model.Entitty
+namespace Screw.Model.Entity
 {
     /// <summary>
-	/// Type of extrusion: by entity (depth and direction) 
-	/// or by collecton of sketches
-	/// </summary>
-	public enum ExtrusionType { ByEntity, BySketchesCollection };
+    /// Type of extrusion: by entity (depth and direction) 
+    /// or by collecton of sketches
+    /// </summary>
+    public enum ExtrusionType { ByEntity, BySketchesCollection };
 
     /// <summary>
     /// Extrusion class.
@@ -39,6 +35,7 @@ namespace Screw.Model.Entitty
 
         /// <summary>
         /// Main base face area state. Necessary for correctly define _main_ base plane and _parallel_ base plane.
+        /// Необходим для правильного определения базовой_основной плоскости и параллельной базовой плоскости.
         /// </summary>
         public KompasFaces.BaseFaceAreaState BaseFaceAreaState
         {
@@ -67,12 +64,12 @@ namespace Screw.Model.Entitty
         {
             get
             {
-                // If extruded entity isn't finded -- find where is it after extrusion operation
+                // Если выдавленный объект не найден, найти его после операции выдавливания.
                 if (_extrudedEntity == null)
                 {
                     return _extrudedEntity = GetExtrudedEntity();
                 }
-                // Else just return already finded entity
+                // Else просто вернуть уже найденный объект
                 else
                 {
                     return _extrudedEntity;
@@ -81,7 +78,7 @@ namespace Screw.Model.Entitty
         }
 
         /// <summary>
-        /// Extrusion by direction, depth and extrudable entity
+        /// Выдавливание по направлению, глубине и выдавливаемому объекту
         /// </summary>
         /// <param name="doc3DPart">Kompas document 3D part</param>
         /// <param name="extrusionType">Extrusion type</param>
@@ -114,7 +111,7 @@ namespace Screw.Model.Entitty
                 }
             }
 
-            // Get direction of extrusion
+            // Получение направление выдавливания
             bool normalDirection = true;
 
             if (extrusionType == ExtrusionType.ByEntity)
@@ -133,7 +130,7 @@ namespace Screw.Model.Entitty
                     return;
                 }
 
-                // Depth must not be equal to zero
+                // Глубина не должна быть равна нулю
                 if (parameters.Depth == default(double) || !DoubleValidator.Validate(parameters.Depth))
                 {
                     LastErrorCode = ErrorCodes.ArgumentInvalid;
@@ -172,10 +169,6 @@ namespace Screw.Model.Entitty
                 LastErrorCode = ErrorCodes.ExtrusionFacesCountWrong;
                 return;
             }
-        }
-
-        public KompasExtrusion(KompasExtrusionParameters extrusionParameters, ExtrusionType byEntity)
-        {
         }
 
         /// <summary>
@@ -371,7 +364,7 @@ namespace Screw.Model.Entitty
 
             if (entityDefBaseLoft.SetLoftParam(
                 true/*directory is closed*/,
-                true/*parameter reserved by API >_< */,
+                true/*parameter reserved by API */,
                 true/*autopath*/
             ) != true)
             {
@@ -476,20 +469,6 @@ namespace Screw.Model.Entitty
 
         /// <summary>
         /// Get extruded entity by <seealso cref="_baseFaceAreaState">information about _main_ base face area</seealso>
-        /// Комментарий к реализации метода.
-        /// Рассмотрим несколько ситуаций:
-        ///	1. Main меньше, чем Parallel
-        ///		1.1 Работаем с RegPoly
-        ///			Если это 5ти- и более гранник, то геттим 2 плоскости
-        ///		1.2 Работаем с Cylinder
-        ///			Геттим 2 плоскости
-        ///			При этом одна из них обязательно будет меньше второй, по этому факту и определяем нужную плоскость
-        ///	2. Main больше, чем Parallel
-        ///		2.1 Работаем с RegPoly
-        ///			Main не существует как плоскости, поэтому граней на одну меньше, в итоге геттим лишь одну грань
-        ///		2.2 Работаем с Cylinder
-        ///			Геттим только ту плоскость, которая не IsCylinder; индекс второй оставляем 0
-        ///			В конечном счёте останется лишь одна плоскость
         /// </summary>
         /// <returns>Extruded entity</returns>
         private ksEntity GetExtrudedEntity()

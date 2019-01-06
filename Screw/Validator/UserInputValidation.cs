@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Screw.Validator
 {
     /// <summary>
-	/// Class for event handler "CheckNumberKeyPressed".
-	/// </summary>
-	class UserInputValidation
+    /// Класс для обработчика событий "CheckNumberKeyPressed".
+    /// </summary>
+    class UserInputValidation
     {
         /// <summary>
-        /// Checks for entering only numbers. He's public!
+        /// Проверяет на ввод только цифры.
         /// </summary>
-        /// If not in [0-9] or delimiter was entered -- set event handled.
-        /// Delimiter is dot or comma -> input number must contain only 1 dot or only 1 comma.
+        /// If отсутствует в [0-9] или введен разделитель -- установить событие обработано.
+        ///Разделитель - точка или запятая -> вводимый номер должен содержать только 1 точку или только 1 запятую.
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public static void CheckNumberKeyPressed(object sender, KeyPressEventArgs e)
@@ -28,7 +25,7 @@ namespace Screw.Validator
             {
                 e.Handled = true;
             }
-            /* Otherwise validation is OK */
+            /* В противном случае проверка в порядке */
         }
     }
 }
