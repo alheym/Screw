@@ -18,9 +18,9 @@ namespace Screw.UnitTests.Manager
         /// <summary>
         /// Construct kompas application
         /// </summary>
-        /// <param name="res">Expected result</param>
+        /// <param name="res">Ожидаемый результат</param>
         /// <param name="parameters">Parameters for build</param>
-        [TestCase(ErrorCodes.OK, 27, 5, 25, 64, 10, 5, TestName = "ConstructKompasApplication, normal parameters")]
+        [TestCase(ErrorCodes.OK, 27, 5, 25, 64, 10, 5, TestName = "ConstructKompasApplication, нормальные параметры")]
         public void TestConstructKompasApplication(ErrorCodes res, params double[] parameters)
         {
             var figureParameters = new List<double>();
@@ -39,7 +39,7 @@ namespace Screw.UnitTests.Manager
         }
 
         /// <summary>
-        /// Create Kompas application for tests
+        /// Создать Kompas application для теста
         /// </summary>
         /// <returns>Kompas application</returns>
         public KompasApplication CreateKompasApplication()
@@ -55,9 +55,9 @@ namespace Screw.UnitTests.Manager
         }
 
         /// <summary>
-        /// Destruct Kompas application
+        /// Разрушить(удалить) Kompas application
         /// </summary>
-        [TestCase(TestName = "DestructKompasApplication, normal parameters")]
+        [TestCase(TestName = "DestructKompasApplication, нормальные параметры")]
         public void TestDestructKompasApplication()
         {
             var parameters = new List<double>() { 27, 5, 25, 64, 10, 5 };

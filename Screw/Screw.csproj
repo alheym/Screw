@@ -92,6 +92,10 @@
     <Compile Include="UnitTests\Manager\BuildManagerTest.cs" />
     <Compile Include="UnitTests\Manager\FigureParametersTest.cs" />
     <Compile Include="UnitTests\Manager\KompasApplicationTest.cs" />
+    <Compile Include="UnitTests\Model\Entity\KompasExtrusionTest.cs" />
+    <Compile Include="UnitTests\Model\Entity\KompasSketchTest.cs" />
+    <Compile Include="UnitTests\Model\Point\Point2DTest.cs" />
+    <Compile Include="UnitTests\Model\Point\Point3DTest.cs" />
     <Compile Include="Validator\DoubleValidator.cs" />
     <Compile Include="Validator\FigureParametersValidator.cs" />
     <Compile Include="Validator\IValidator.cs" />
@@ -210,9 +214,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UnitTests\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

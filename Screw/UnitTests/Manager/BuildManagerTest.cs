@@ -36,10 +36,10 @@ namespace Screw.UnitTests
         /// </summary>
         /// <param name="expected">Ожидаемое состояние сборки:  true or false</param>
         /// <param name="parameters">Parameters</param>
-        [TestCase(true, 2700, 500, 1500, 6400, 1000, 500, TestName = "Build manager, high values     (10^^2)")]
-        [TestCase(true, 270, 50, 150, 640, 100, 50, TestName = "Build manager, high values     (10^^1)")]
-        [TestCase(true, 27, 5, 15, 64, 10, 5, TestName = "Build manager, correct values  (10)")]
-        [TestCase(true, 2.7, 0.5, 1.5, 6.4, 1.0, 0.5, TestName = "Build manager, very low values (0.1)")]
+        [TestCase(true, 2700, 500, 1500, 6400, 1000, 500, TestName = "Build manager, высокие значения  (10^^2)")]
+        [TestCase(true, 270, 50, 150, 640, 100, 50, TestName = "Build manager, высокие значения  (10^^1)")]
+        [TestCase(true, 27, 5, 15, 64, 10, 5, TestName = "Build manager, правильные значения  (10)")]
+        [TestCase(true, 2.7, 0.5, 1.5, 6.4, 1.0, 0.5, TestName = "Build manager, очень низкие значения  (0.1)")]
         public void CreateDetail(bool expected, params double[] parameters)
         {
             var figureParameters = new List<double>();
