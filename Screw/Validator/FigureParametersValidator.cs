@@ -9,18 +9,6 @@ namespace Screw.Validator
     /// </summary>
     class FigureParametersValidator : IValidator
     {
-        /*	Elements of chain: 
-			ScrewHatWidth			- W3
-			ScrewHatInnerDiameter	- d = H1
-			
-			ScrewHatHeight			- H1'
-			ScrewHatChamferHeight	- H2 (count depending on H1')
-
-			ScrewBaseSmoothPart		- W1
-			ScrewBaseThreadPart		- W2
-			NutHeight				- H
-			NutThreadDiameter		- D
-		*/
 
         /// <summary>
         /// Figure parameters
@@ -87,14 +75,15 @@ namespace Screw.Validator
             if (!( _figureParameters[1]<=screwHatHeight))
             {
                 diapasonStart = screwHatHeight;
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение глубины шлица m не может быть больше или равно значению высоты шляпки H", diapasonStart);
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение глубины шлица m не должно быть больше или равно значению высоты шляпки H", diapasonStart);
                 ErrorList.Add(errorMessage);
             }
             // b) l + b <= H 
             if ((screwBaseWidth <= screwHatHeight))
             {
                 diapasonStart = screwBaseWidth;
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение параметра H не может быть больше чем l + b", diapasonStart);
+                diapasonEnd = screwHatHeight;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение параметра H не должно быть больше чем l + b", diapasonStart);
                 errorMessage += "\n(Этот параметр зависит от l и b)";
                 ErrorList.Add(errorMessage);
             }
@@ -103,7 +92,8 @@ namespace Screw.Validator
             if (_figureParameters[0] <= _figureParameters[5])
             {
                 diapasonStart = _figureParameters[0];
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение ширины шлица n не может быть больше или равно диаметру шляпки D", diapasonStart);
+                diapasonEnd = _figureParameters[5];
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение ширины шлица n не должно быть больше или равно диаметру шляпки D", diapasonStart);
                 ErrorList.Add(errorMessage);
             }
 
@@ -111,10 +101,42 @@ namespace Screw.Validator
             if (!(_figureParameters[2] <= _figureParameters[3]))
             {
                 diapasonStart = _figureParameters[2];
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина гладкой части l больше/равна длины резьбы b \n(for your parameters: {0:####.##} => b", diapasonStart);
+                diapasonEnd = _figureParameters[3];
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина гладкой части l не должно быть больше длины резьбы b", diapasonStart);
                 ErrorList.Add(errorMessage);
             }
 
+            // b > 100
+            if (_figureParameters[3] > 100)
+            {
+                diapasonStart = 100;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина резьбы не должна быть больше 100", diapasonStart);
+                ErrorList.Add(errorMessage);
+            }
+
+            // l > 35
+            if (_figureParameters[2] > 35)
+            {
+                diapasonStart = 35;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина гладкой части не должна быть больше 35", diapasonStart);
+                ErrorList.Add(errorMessage);
+            }
+
+            // D > 45
+            if (_figureParameters[0] > 45)
+            {
+                diapasonStart = 45;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Диаметр шляпки не должен быть больше 45", diapasonStart);
+                ErrorList.Add(errorMessage);
+            }
+
+            // H > 20
+            if (_figureParameters[4] > 20)
+            {
+                diapasonStart = 20;
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Длина шляпки не должна быть больше 20", diapasonStart);
+                ErrorList.Add(errorMessage);
+            }
             return ErrorList.Count == 0;
         }
 
@@ -136,13 +158,13 @@ namespace Screw.Validator
                     ErrorList.Add("Параметр должен быть больше 0.1");
                     return false;
                 }
-                if (parameter >= 10000)
+                if (parameter >= 1000)
                 {
-                    ErrorList.Add("Параметр должен быть меньше 10000");
+                    ErrorList.Add("Параметр должен быть меньше 1000");
                 }
                 if (!DoubleValidator.Validate(parameter))
                 {
-                    ErrorList.Add("Parameter is not a correct double value");
+                    ErrorList.Add("Некорректное значение парамета");
                     return false;
                 }
             }

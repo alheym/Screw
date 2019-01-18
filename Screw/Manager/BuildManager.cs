@@ -7,12 +7,13 @@ using Screw.Model.FigureParam;
 using Screw.Model.Entity;
 using Screw.Error;
 using Screw.Validator;
+using Screw.Model;
 
 namespace Screw.Manager
 {
     /// <summary>
     /// Build manager.
-    /// Manages creation of build with screw and nut.
+    /// Manages creation of build with screw.
     /// </summary>
     public class BuildManager : IManagable
     {
@@ -20,6 +21,11 @@ namespace Screw.Manager
         /// Kompas application specimen
         /// </summary>
         private KompasApplication _kompasApp;
+
+        /// <summary>
+        /// Type of screwdriver.
+        /// </summary>
+        public Screwdriver ScrewdriverType = Screwdriver.WithoutHole;
 
         /// <summary>
         /// Last error code
@@ -52,8 +58,6 @@ namespace Screw.Manager
         {
             if (!CreateScrew()) return false;
 
-            //if (!CreateNut()) return false;
-
             return true;
         }
 
@@ -69,6 +73,8 @@ namespace Screw.Manager
                 LastErrorCode = screwManager.LastErrorCode;
                 return false;
             }
+
+            screwManager.ScrewdriverType = ScrewdriverType;
 
             if (!screwManager.CreateDetail())
             {

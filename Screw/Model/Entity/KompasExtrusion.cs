@@ -14,7 +14,7 @@ namespace Screw.Model.Entity
 
     /// <summary>
     /// Extrusion class.
-    /// Represents extrusion of detail of 3D document.
+    /// Представляет выдавливание детали 3D документа.
     /// </summary>
     class KompasExtrusion
     {
@@ -34,7 +34,6 @@ namespace Screw.Model.Entity
         private ksPart _doc3DPart;
 
         /// <summary>
-        /// Main base face area state. Necessary for correctly define _main_ base plane and _parallel_ base plane.
         /// Необходим для правильного определения базовой_основной плоскости и параллельной базовой плоскости.
         /// </summary>
         public KompasFaces.BaseFaceAreaState BaseFaceAreaState
@@ -101,7 +100,7 @@ namespace Screw.Model.Entity
                 return;
             }
 
-            // ExtrudABLE entity isn't using ONLY in base loft
+            // ExtrudABLE используется ТОЛЬКО в базовом
             if (parameters.ExtrusionType != Obj3dType.o3d_baseLoft)
             {
                 if (parameters.ExtrudableEntity == null)
@@ -138,7 +137,7 @@ namespace Screw.Model.Entity
                 }
             }
 
-            // Entity faces count before extrusion
+            // Объекты выдавливания считаются перед выполнением операции
             var faceCollection = (ksEntityCollection)parameters.Document3DPart.EntityCollection((short)Obj3dType.o3d_face);
             _facesCountBeforeExtrusion = faceCollection.GetCount();
 
@@ -160,7 +159,7 @@ namespace Screw.Model.Entity
 
             _doc3DPart = parameters.Document3DPart;
 
-            // Get faces count after extrusion
+            //Получить количество face после выдавливания
             faceCollection.refresh();
             _facesCountAfterExtrusion = faceCollection.GetCount();
 
@@ -172,7 +171,7 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Create extrusion based on extrudable sketch
+        /// Создание экструзии на основе экструдируемого эскиза
         /// </summary>
         /// <param name="entity">Entity of extrusion</param>
         /// <param name="extrusionType">Extrusion type</param>
@@ -212,7 +211,7 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Create extrusion based on extrudable sketch
+        /// Создание экструзии на основе экструдируемого эскиза
         /// </summary>
         /// <param name="entity">Entity of extrusion</param>
         /// <param name="extrusionType">Extrusion type</param>
@@ -354,7 +353,7 @@ namespace Screw.Model.Entity
             {
                 if (i == 0)
                 {
-                    entityDefBaseLoft.Sketchs().Add(parameters.SketchesCollection.First()); // Sketchs() is error in word in API, not mine
+                    entityDefBaseLoft.Sketchs().Add(parameters.SketchesCollection.First());
                 }
                 else
                 {

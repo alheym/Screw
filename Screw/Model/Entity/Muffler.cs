@@ -113,7 +113,7 @@ namespace Screw.Model.Entity
             var mufflerRectangleParam = new RectangleParameter(_kompasApp, _kompasApp.Parameters[0], _kompasApp.Parameters[0], figureParameters.BasePlanePoint);
             if (mufflerSketchEdit.ksRectangle(mufflerRectangleParam.FigureParam) == 0)
             {
-                LastErrorCode = ErrorCodes.Document2DRectangleCreateError;
+                LastErrorCode = ErrorCodes.Document2DRegPolyCreateError;
                 return null;
             }
 

@@ -24,7 +24,7 @@
         // Document 2D
         Document2DCircleCreatingError,
         Document2DRegPolyCreatingError,
-        Document2DRectangleCreateError,
+        Document2DRegPolyCreateError,
 
         // Build manager errors
         Document3DGetPartError,

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace Screw.Error
 {
     /// <summary>
-    /// User input error catcher
+    /// ошибки ввода пользователем
     /// </summary>
     class UserInputErrorCatcher
     {
@@ -13,14 +13,14 @@ namespace Screw.Error
         /// </summary>
         public void CatchError(List<string> errors)
         {
-            string errorMessage = "Error during user input. \n Please check these cases: \n\n";
+            string errorMessage = "Ошибка при вводе пользователем. \n Пожалуйста, проверьте эти данные: \n\n";
 
             foreach (string error in errors)
             {
                 errorMessage += error + "\n\n";
             }
 
-            MessageBox.Show(errorMessage, "User input error",
+            MessageBox.Show(errorMessage, "Ошибка ввода пользователем",
                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }

@@ -43,15 +43,6 @@ namespace Screw
         }
 
         /// <summary>
-        /// Nut part of build
-        /// </summary>
-        public ksPart NutPart
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Step of thread of figures in build
         /// </summary>
         public double ThreadStep
@@ -110,12 +101,7 @@ namespace Screw
             // Create screw detail on 3D document
             ScrewPart = (ksPart)Document3D.GetPart((short)Part_Type.pTop_Part);
 
-            // Create nut detail on 3D document
-            NutPart = (ksPart)Document3D.GetPart((short)Part_Type.pTop_Part);
-
-            if (ScrewPart == null
-                || NutPart == null
-            )
+            if (ScrewPart == null)
             {
                 LastErrorCode = ErrorCodes.Document3DGetPartError;
                 return false;
@@ -186,7 +172,6 @@ namespace Screw
 
             Document3D = null;
             ScrewPart = null;
-            NutPart = null;
 
             LastErrorCode = ErrorCodes.OK;
         }

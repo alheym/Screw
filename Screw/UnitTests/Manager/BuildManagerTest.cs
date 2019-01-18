@@ -15,21 +15,22 @@ namespace Screw.UnitTests
     [TestFixture]
     class BuildManagerTest
     {
-        ///// <summary>
-        ///// Загрузить сборщик определенное количество раз
-        ///// </summary>
-        ///// <param name="amountOfLoads">Amount of loads of builder</param>
-        //[TestCase(90, TestName = "Запуск сборщика 90 раз")]
-        //public void LoadBuilder(int amountOfLoads)
-        //{
-        //    var res = true;
-        //    var parameters = new double[] { 27, 5, 15, 64, 10, 5 };
+        /// <summary>
+        /// Загрузить сборщик определенное количество раз
+        /// </summary>
+        /// <param name="amountOfLoads">Amount of loads of builder</param>
+        [TestCase(10, TestName = "Запуск сборщика 90 раз")]
+        public void LoadBuilder(int amountOfLoads)
+        {
+            var res = true;
+            var parameters = new double[] { 27, 5, 15, 64, 10, 5 };
 
-        //    for (int i = 0; i < amountOfLoads; i++)
-        //    {
-        //        CreateDetail(res, parameters);
-        //    }
-        //}
+            for (int i = 0; i < amountOfLoads; i++)
+            {
+                CreateDetail(res, parameters);
+            }
+
+        }
 
         /// <summary>
         /// Проверка корректных значений

@@ -40,6 +40,13 @@ namespace Screw
 
             CloseKompas3D.Enabled = false;
             RunButton.Enabled = false;
+            Defaults.Enabled = false;
+
+            WithoutHoleRadioButton.Enabled = false;
+            CrossheadScrewdriverRadioButton.Enabled = false;
+            FlatheadScrewdriverRadioButton.Enabled = false;
+            RegularPolygonScrewdriverRadioButton.Enabled = false;
+
             SetAllInputsEnabledState(false);
 
             // Set culture info for current thread
@@ -83,7 +90,7 @@ namespace Screw
                 var nutThreadDiameter = Convert.ToDouble(NutThreadDiameter.Text);
 
                 var parameters = new List<double>() {screwHatWidth, screwHatInnerDiameter, screwBaseSmoothWidth,
-                screwBaseThreadWidth, nutHeight, nutThreadDiameter };
+                screwBaseThreadWidth, nutHeight, nutThreadDiameter};
 
                 var validator = new FigureParametersValidator(parameters);
                 if (validator.LastErrorCode != ErrorCodes.OK)
@@ -143,11 +150,44 @@ namespace Screw
                 SetAllInputsEnabledState(true);
 
                 RunButton.Enabled = true;
+                Defaults.Enabled = true;
+
+                WithoutHoleRadioButton.Enabled = true;
+                CrossheadScrewdriverRadioButton.Enabled = true;
+                FlatheadScrewdriverRadioButton.Enabled = true;
+                RegularPolygonScrewdriverRadioButton.Enabled = true;
 
                 LoadKompas3D.Enabled = false;
                 CloseKompas3D.Enabled = true;
             }
         }
+
+        /// <summary>
+		/// Get selected screwdriver type.
+		/// </summary>
+		/// <returns>Selected screwdriver type.</returns>
+		private Screwdriver GetSelectedScrewdriverType()
+        {
+            if (WithoutHoleRadioButton.Checked == true)
+            {
+                return Screwdriver.WithoutHole;
+            }
+            else if (CrossheadScrewdriverRadioButton.Checked == true)
+            {
+                return Screwdriver.CrossheadScrewdriver;
+            }
+            else if (FlatheadScrewdriverRadioButton.Checked == true)
+            {
+                return Screwdriver.FlatheadScrewdriver;
+            }
+            else if (RegularPolygonScrewdriverRadioButton.Checked == true)
+            {
+                return Screwdriver.RegularPolygonScrewdriver;
+            }
+
+            throw new ArgumentException("Screwdriver is not checked in list of screwdriver types.");
+        }
+
 
 
         /// <summary>
@@ -193,6 +233,7 @@ namespace Screw
                 return;
             }
 
+            _buildManager.ScrewdriverType = GetSelectedScrewdriverType();
             _buildManager.CreateDetail();
 
             if (_buildManager.LastErrorCode != ErrorCodes.OK)
@@ -238,6 +279,16 @@ namespace Screw
                 LoadKompas3D.Enabled = true;
                 CloseKompas3D.Enabled = false;
             }
+        }
+
+        private void FlatheadScrewdriverRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void WithoutHoleRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
