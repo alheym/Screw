@@ -50,7 +50,7 @@ namespace Screw.Model.FigureParam
                 return;
             }
 
-            // Angles amount must be from 3 to 12
+            // Количество углов должно быть от 3 до 12
             if (anglesCount <= 2
                 || anglesCount >= 13
                 || !DoubleValidator.Validate(anglesCount)

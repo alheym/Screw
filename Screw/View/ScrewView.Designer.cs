@@ -49,10 +49,10 @@
             this.ScrewBaseThreadPartLabel = new System.Windows.Forms.Label();
             this.ScrewHatInnerCircleLabel = new System.Windows.Forms.Label();
             this.TypeOfScrewdriverHoleGroupBox = new System.Windows.Forms.GroupBox();
+            this.RegularPolygonScrewdriverRadioButton = new System.Windows.Forms.RadioButton();
             this.WithoutHoleRadioButton = new System.Windows.Forms.RadioButton();
             this.CrossheadScrewdriverRadioButton = new System.Windows.Forms.RadioButton();
             this.FlatheadScrewdriverRadioButton = new System.Windows.Forms.RadioButton();
-            this.RegularPolygonScrewdriverRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.TypeOfScrewdriverHoleGroupBox.SuspendLayout();
@@ -130,7 +130,7 @@
             this.Defaults.TabIndex = 7;
             this.Defaults.Text = "Standard parameters";
             this.Defaults.UseVisualStyleBackColor = true;
-            this.Defaults.Click += new System.EventHandler(this.Defaults_Click_1);
+            this.Defaults.Click += new System.EventHandler(this.Defaults_Click);
             // 
             // RunButton
             // 
@@ -341,6 +341,19 @@
             this.TypeOfScrewdriverHoleGroupBox.TabStop = false;
             this.TypeOfScrewdriverHoleGroupBox.Text = "Type of screwdriver hole";
             // 
+            // RegularPolygonScrewdriverRadioButton
+            // 
+            this.RegularPolygonScrewdriverRadioButton.AutoSize = true;
+            this.RegularPolygonScrewdriverRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RegularPolygonScrewdriverRadioButton.Location = new System.Drawing.Point(13, 138);
+            this.RegularPolygonScrewdriverRadioButton.Margin = new System.Windows.Forms.Padding(4);
+            this.RegularPolygonScrewdriverRadioButton.Name = "RegularPolygonScrewdriverRadioButton";
+            this.RegularPolygonScrewdriverRadioButton.Size = new System.Drawing.Size(246, 24);
+            this.RegularPolygonScrewdriverRadioButton.TabIndex = 19;
+            this.RegularPolygonScrewdriverRadioButton.TabStop = true;
+            this.RegularPolygonScrewdriverRadioButton.Text = "Regular Polygon Screwdriver\r\n";
+            this.RegularPolygonScrewdriverRadioButton.UseVisualStyleBackColor = true;
+            // 
             // WithoutHoleRadioButton
             // 
             this.WithoutHoleRadioButton.AutoSize = true;
@@ -354,7 +367,6 @@
             this.WithoutHoleRadioButton.TabStop = true;
             this.WithoutHoleRadioButton.Text = "Without a hole";
             this.WithoutHoleRadioButton.UseVisualStyleBackColor = true;
-            this.WithoutHoleRadioButton.CheckedChanged += new System.EventHandler(this.WithoutHoleRadioButton_CheckedChanged);
             // 
             // CrossheadScrewdriverRadioButton
             // 
@@ -381,30 +393,17 @@
             this.FlatheadScrewdriverRadioButton.TabStop = true;
             this.FlatheadScrewdriverRadioButton.Text = "Flathead screwdriver";
             this.FlatheadScrewdriverRadioButton.UseVisualStyleBackColor = true;
-            this.FlatheadScrewdriverRadioButton.CheckedChanged += new System.EventHandler(this.FlatheadScrewdriverRadioButton_CheckedChanged);
-            // 
-            // RegularPolygonScrewdriverRadioButton
-            // 
-            this.RegularPolygonScrewdriverRadioButton.AutoSize = true;
-            this.RegularPolygonScrewdriverRadioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RegularPolygonScrewdriverRadioButton.Location = new System.Drawing.Point(13, 138);
-            this.RegularPolygonScrewdriverRadioButton.Margin = new System.Windows.Forms.Padding(4);
-            this.RegularPolygonScrewdriverRadioButton.Name = "RegularPolygonScrewdriverRadioButton";
-            this.RegularPolygonScrewdriverRadioButton.Size = new System.Drawing.Size(246, 24);
-            this.RegularPolygonScrewdriverRadioButton.TabIndex = 19;
-            this.RegularPolygonScrewdriverRadioButton.TabStop = true;
-            this.RegularPolygonScrewdriverRadioButton.Text = "Regular Polygon Screwdriver\r\n";
-            this.RegularPolygonScrewdriverRadioButton.UseVisualStyleBackColor = true;
             // 
             // ScrewView
             // 
-            this.ClientSize = new System.Drawing.Size(388, 624);
+            this.ClientSize = new System.Drawing.Size(388, 623);
             this.Controls.Add(this.TypeOfScrewdriverHoleGroupBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Defaults);
             this.Controls.Add(this.RunButton);
             this.Controls.Add(this.groupBox2);
-            this.MinimumSize = new System.Drawing.Size(406, 587);
+            this.MaximumSize = new System.Drawing.Size(406, 670);
+            this.MinimumSize = new System.Drawing.Size(406, 670);
             this.Name = "ScrewView";
             this.Text = "Build screw";
             this.groupBox1.ResumeLayout(false);

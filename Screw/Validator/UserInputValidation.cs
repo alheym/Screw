@@ -19,9 +19,8 @@ namespace Screw.Validator
         {
             if (!(Char.IsControl(e.KeyChar))
                 && !(Char.IsDigit(e.KeyChar))
-                && !((e.KeyChar == '.') && (((TextBox)sender).Text.IndexOf(".") == -1) && (((TextBox)sender).Text.IndexOf(",") == -1))
-                && !((e.KeyChar == ',') && (((TextBox)sender).Text.IndexOf(",") == -1) && (((TextBox)sender).Text.IndexOf(".") == -1))
-            )
+                && !((e.KeyChar == '.') && (((TextBox)sender).Text.IndexOf(".") == -1))
+                )
             {
                 e.Handled = true;
             }

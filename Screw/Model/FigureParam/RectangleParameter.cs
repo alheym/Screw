@@ -12,36 +12,16 @@ namespace Screw.Model.FigureParam
     /// </summary>
     public class RectangleParameter
     {
-        /// <summary>
-        /// Kompas application
-        /// </summary>
-        private KompasApplication _kompasApp;
-
-        /// <summary>
-        /// Rectangle parameters
-        /// </summary>
-        private ksRectangleParam _rectangleParam;
-
-        /// <summary>
-        /// Last error code
-        /// </summary>
-        private ErrorCodes _lastErrorCode = ErrorCodes.OK;
 
         /// <summary>
         /// Get rectangle parameter
         /// </summary>
-        public ksRectangleParam FigureParam
-        {
-            get { return _rectangleParam; }
-        }
+        public ksRectangleParam FigureParam { get; }
 
         /// <summary>
         /// Last error code getter
         /// </summary>
-        public ErrorCodes LastErrorCode
-        {
-            get { return _lastErrorCode; }
-        }
+        public ErrorCodes LastErrorCode { get; } = ErrorCodes.OK;
 
         /// <summary>
         /// Set rectangle param
@@ -56,7 +36,7 @@ namespace Screw.Model.FigureParam
                 || point2D.LastErrorCode != ErrorCodes.OK
             )
             {
-                _lastErrorCode = ErrorCodes.ArgumentNull;
+                LastErrorCode = ErrorCodes.ArgumentNull;
                 return;
             }
 
@@ -68,7 +48,7 @@ namespace Screw.Model.FigureParam
                 || !DoubleValidator.Validate(point2D.Y)
             )
             {
-                _lastErrorCode = ErrorCodes.ArgumentInvalid;
+                LastErrorCode = ErrorCodes.ArgumentInvalid;
                 return;
             }
 
@@ -85,10 +65,10 @@ namespace Screw.Model.FigureParam
 
             if (rectangleParam == null)
             {
-                _lastErrorCode = ErrorCodes.EntityDefinitionNull;
+                LastErrorCode = ErrorCodes.EntityDefinitionNull;
                 return;
             }
-            _rectangleParam = rectangleParam;
+            FigureParam = rectangleParam;
         }
     }
 }

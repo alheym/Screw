@@ -15,7 +15,7 @@ namespace Screw.Manager
     /// Build manager.
     /// Manages creation of build with screw.
     /// </summary>
-    public class BuildManager : IManagable
+    public class BuildManager : IBuildable
     {
         /// <summary>
         /// Kompas application specimen

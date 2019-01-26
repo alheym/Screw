@@ -14,7 +14,7 @@ namespace Screw.Model.Entity
     /// <summary>
 	/// Crosshead screwdriver.
 	/// </summary>
-	class CrossheadScrewdriver : ScrewdriverBase
+	 class CrossheadScrewdriver : ScrewdriverBase
     {
         /// <summary>
         /// Screwdriver builder.
@@ -26,42 +26,28 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Builds flathead screwdriver.
+        /// Builds crosshead screwdriver.
         /// </summary>
         /// <returns>Screwdriver entity</returns>
         public override ksEntity BuildScrewdriver()
         {
-            var D = _kompasApp.Parameters[0];
-            var H = _kompasApp.Parameters[5];
 
+            var Diameter = _kompasApp.Parameters[0];
+            var Hate = _kompasApp.Parameters[5];
 
-            var offsetX = -0.35 * D;
-            var offsetY = -0.4 * H;
+            var width = 0.3 * Diameter;
+            var height = 0.95 * Hate;
 
-            var width = 0.7 * D;
-            var height = 0.8 * H;
-
-            var parameters = new double[4] { offsetX, offsetY, width, height };
-
-            var entity = CreateCutout(parameters);
-            if (entity == null)
-            {
-                return null;
-            }
-
-            // Reverse parameters to build crosshead rectangle
-            parameters = new double[4] { offsetY, offsetX, height, width };
-
-            entity = CreateCutout(parameters);
+            var parameters = new double[2] { width, height };
+          
+            var entity = CreateCutou(parameters);
             if (entity == null)
             {
                 return null;
             }
 
             return entity;
-
-
         }
-    }
+     }
     
 }

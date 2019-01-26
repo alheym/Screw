@@ -211,50 +211,6 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Создание экструзии на основе экструдируемого эскиза
-        /// </summary>
-        /// <param name="entity">Entity of extrusion</param>
-        /// <param name="extrusionType">Extrusion type</param>
-        /// <param name="extrudableEntity">Extrudable entity</param>
-        /// <param name="sketchesCollection">Sketches collection for extrusion</param>
-        /// <returns>true if operation is successful; false in case of error</returns>
-        private bool CreateExtrusionBySketchCollection(ksEntity entity, KompasExtrusionParameters parameters)
-        {
-            switch (parameters.ExtrusionType)
-            {
-                case Obj3dType.o3d_baseEvolution:
-                    if (!SetBaseEvolutionDefinition(entity, parameters))
-                    {
-                        return false;
-                    }
-                    break;
-                case Obj3dType.o3d_cutEvolution:
-                    if (!SetCutEvolutionDefinition(entity, parameters))
-                    {
-                        return false;
-                    }
-                    break;
-                case Obj3dType.o3d_baseLoft:
-                    if (!SetBaseLoftDefinition(entity, parameters))
-                    {
-                        return false;
-                    }
-                    break;
-                default:
-                    LastErrorCode = ErrorCodes.ExtrusionTypeCurrentlyNotSupported;
-                    return false;
-            }
-
-            if (entity.Create() != true)
-            {
-                LastErrorCode = ErrorCodes.EntityCreateError;
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Set base extruson definition
         /// </summary>
         /// <param name="entity">Extrusion entity</param>
@@ -289,6 +245,38 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
+        /// Создание экструзии на основе экструдируемого эскиза
+        /// </summary>
+        /// <param name="entity">Entity of extrusion</param>
+        /// <param name="extrusionType">Extrusion type</param>
+        /// <param name="extrudableEntity">Extrudable entity</param>
+        /// <param name="sketchesCollection">Sketches collection for extrusion</param>
+        /// <returns>true if operation is successful; false in case of error</returns>
+        private bool CreateExtrusionBySketchCollection(ksEntity entity, KompasExtrusionParameters parameters)
+        {
+            switch (parameters.ExtrusionType)
+            {
+                case Obj3dType.o3d_baseEvolution:
+                    if (!SetBaseEvolutionDefinition(entity, parameters))
+                    {
+                        return false;
+                    }
+                    break;
+                default:
+                    LastErrorCode = ErrorCodes.ExtrusionTypeCurrentlyNotSupported;
+                    return false;
+            }
+
+            if (entity.Create() != true)
+            {
+                LastErrorCode = ErrorCodes.EntityCreateError;
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Set cut extrusion
         /// </summary>
         /// <param name="entity">Extrusion entity</param>
@@ -316,58 +304,6 @@ namespace Screw.Model.Entity
             if (entityDefCut.SetSketch(parameters.ExtrudableEntity) != true)
             {
                 LastErrorCode = ErrorCodes.ExtrusionSetSketchError;
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Set base loft definition
-        /// </summary>
-        /// <param name="entity">Extruson entity</param>
-        /// <param name="sketchesCollection">Loft sketches collection</param>
-        /// <returns>true if operation successful, false in case of error</returns>
-        private bool SetBaseLoftDefinition(ksEntity entity, KompasExtrusionParameters parameters)
-        {
-            var entityDefBaseLoft = (ksBaseLoftDefinition)entity.GetDefinition();
-
-            if (entityDefBaseLoft == null)
-            {
-                LastErrorCode = ErrorCodes.EntityDefinitionNull;
-                return false;
-            }
-            if (parameters.SketchesCollection == null)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSketchesNull;
-                return false;
-            }
-            if (parameters.SketchesCollection.GetCount() == 0)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSketchesNotSet;
-                return false;
-            }
-
-            // Set loft sketches
-            for (int i = 0, count = parameters.SketchesCollection.GetCount(); i < count; i++)
-            {
-                if (i == 0)
-                {
-                    entityDefBaseLoft.Sketchs().Add(parameters.SketchesCollection.First());
-                }
-                else
-                {
-                    entityDefBaseLoft.Sketchs().Add(parameters.SketchesCollection.Next());
-                }
-            }
-
-            if (entityDefBaseLoft.SetLoftParam(
-                true/*directory is closed*/,
-                true/*parameter reserved by API */,
-                true/*autopath*/
-            ) != true)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSetLoftParamError;
                 return false;
             }
 
@@ -421,53 +357,7 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Set cut evolution extrusion definition
-        /// </summary>
-        /// <param name="entity">Extruson entity</param>
-        /// <param name="sketchesCollection">Loft sketches collection</param>
-        /// <returns>true if operation successful, false in case of error</returns>
-        private bool SetCutEvolutionDefinition(ksEntity entity, KompasExtrusionParameters parameters)
-        {
-            var entityDefEvolution = (ksCutEvolutionDefinition)entity.GetDefinition();
-            if (entityDefEvolution == null)
-            {
-                LastErrorCode = ErrorCodes.EntityDefinitionNull;
-                return false;
-            }
-            if (parameters.SketchesCollection == null)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSketchesNull;
-                return false;
-            }
-            if (parameters.SketchesCollection.GetCount() == 0)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSketchesNotSet;
-                return false;
-            }
-
-            for (int i = 0, count = parameters.SketchesCollection.GetCount(); i < count; i++)
-            {
-                if (i == 0)
-                {
-                    entityDefEvolution.PathPartArray().Add(parameters.SketchesCollection.First());
-                }
-                else
-                {
-                    entityDefEvolution.PathPartArray().Add(parameters.SketchesCollection.Next());
-                }
-            }
-
-            if (entityDefEvolution.SetSketch(parameters.ExtrudableEntity) != true)
-            {
-                LastErrorCode = ErrorCodes.ExtrusionSetSketchError;
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Get extruded entity by <seealso cref="_baseFaceAreaState">information about _main_ base face area</seealso>
+        ///Получить экструдированный объект <seealso cref="_baseFaceAreaState">информация о _основной базовой грани</seealso>
         /// </summary>
         /// <returns>Extruded entity</returns>
         private ksEntity GetExtrudedEntity()
@@ -482,7 +372,7 @@ namespace Screw.Model.Entity
                 return null;
             }
 
-            // If count of faces is 2 or 3 -- then get cylinder base plane indexes
+            // Если количество граней равно 2 или 3, то получите индексы базовой плоскости цилиндра
             if (facesCount == 2 || facesCount == 3)
             {
                 KompasFaces.GetCylinderBasePlaneIndexes(_doc3DPart,
@@ -490,7 +380,7 @@ namespace Screw.Model.Entity
                     _facesCountAfterExtrusion,
                     out faceIndex1, out faceIndex2);
             }
-            // Square or just a single face isn't supported
+            // Квадрат или просто одна грань не поддерживается
             else if (facesCount == 0 || facesCount == 1 || facesCount == 4)
             {
                 LastErrorCode = ErrorCodes.ExtrusionFacesCountWrong;
@@ -519,7 +409,7 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Set extruded entity to null for further refinding of _main_ base plane
+        /// Установить выдавленную сущность в ноль для дальнейшей переопределения базовой плоскости _main_
         /// </summary>
         public void ResetExtrudedEntity()
         {

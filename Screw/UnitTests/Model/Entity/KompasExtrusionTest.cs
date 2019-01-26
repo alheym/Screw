@@ -80,8 +80,10 @@ namespace Screw.UnitTests.Model.Entity
         /// <param name="errorCode">Error code</param>
         /// <param name="extrusionType">Extrusion type, экземпляр Obj3dType</param>
         /// <param name="directionType">Direction type, экземпляр Direction_Type</param>
-        [TestCase(ErrorCodes.ExtrusionDirectionNotSupported, Obj3dType.o3d_cutExtrusion, Direction_Type.dtMiddlePlane, TestName = "KompasExtrusion по эскизу, тип = cutExtrusion, направление средней плоскости (не поддерживается)")]
-        [TestCase(ErrorCodes.ExtrusionDirectionNotSupported, Obj3dType.o3d_cutExtrusion, Direction_Type.dtBoth, TestName = "KompasExtrusion по эскизу, тип = cutExtrusion, направление = оба (не поддерживается)")]
+        [TestCase(ErrorCodes.ExtrusionDirectionNotSupported, Obj3dType.o3d_cutExtrusion, Direction_Type.dtMiddlePlane, TestName =
+            "KompasExtrusion по эскизу, тип = cutExtrusion, направление средней плоскости (не поддерживается)")]
+        [TestCase(ErrorCodes.ExtrusionDirectionNotSupported, Obj3dType.o3d_cutExtrusion, Direction_Type.dtBoth, TestName = 
+            "KompasExtrusion по эскизу, тип = cutExtrusion, направление = оба (не поддерживается)")]
         public void CutBySketchUnsupportedDirection(ErrorCodes errorCode, Obj3dType extrusionType, Direction_Type directionType)
         {
             var appTest = new KompasApplicationTest();

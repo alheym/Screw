@@ -6,7 +6,7 @@ namespace Screw.Error
     /// <summary>
     /// ошибки ввода пользователем
     /// </summary>
-    class UserInputErrorCatcher
+    public class UserInputErrorCatcher
     {
         /// <summary>
         /// Catch errors

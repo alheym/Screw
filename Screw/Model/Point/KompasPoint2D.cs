@@ -36,6 +36,7 @@ namespace Screw.Model.Point
             get;
             set;
         }
+        
 
         /// <summary>
         /// Kompas 2D Point

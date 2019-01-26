@@ -110,7 +110,8 @@ namespace Screw.Model.Entity
             }
 
             // Глушитель прямоугольник, ширина и высота диаметр шляпки
-            var mufflerRectangleParam = new RectangleParameter(_kompasApp, _kompasApp.Parameters[0], _kompasApp.Parameters[0], figureParameters.BasePlanePoint);
+            var mufflerRectangleParam = new RectangleParameter(_kompasApp, _kompasApp.Parameters[0],
+                _kompasApp.Parameters[0], figureParameters.BasePlanePoint);
             if (mufflerSketchEdit.ksRectangle(mufflerRectangleParam.FigureParam) == 0)
             {
                 LastErrorCode = ErrorCodes.Document2DRegPolyCreateError;
@@ -120,7 +121,8 @@ namespace Screw.Model.Entity
             muffler.EndEntityEdit();
 
             // Выдавливание глушителя, высота глушителя высота шляпки / 4
-            var extrusionParameters = new KompasExtrusionParameters(figureParameters.Document3DPart, Obj3dType.o3d_baseExtrusion, muffler.Entity, figureParameters.Direction, _kompasApp.Parameters[4] / 4.0);
+            var extrusionParameters = new KompasExtrusionParameters(figureParameters.Document3DPart, 
+                Obj3dType.o3d_baseExtrusion, muffler.Entity, figureParameters.Direction, _kompasApp.Parameters[4] / 4.0);
             var mufflerExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity);
 
             if (mufflerExtrusion.LastErrorCode != ErrorCodes.OK)
@@ -152,7 +154,8 @@ namespace Screw.Model.Entity
                 return false;
             }
 
-            var extrusionParameters = new KompasExtrusionParameters(_figureParameters.Document3DPart, Obj3dType.o3d_cutExtrusion, extruded, _figureParameters.Direction, _kompasApp.Parameters[4] / 4.0);
+            var extrusionParameters = new KompasExtrusionParameters(_figureParameters.Document3DPart, Obj3dType.o3d_cutExtrusion,
+                extruded, _figureParameters.Direction, _kompasApp.Parameters[4] / 4.0);
             var mufflerDeletion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity);
 
             if (mufflerDeletion.LastErrorCode != ErrorCodes.OK)

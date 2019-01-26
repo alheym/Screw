@@ -60,12 +60,12 @@ namespace Screw.Model.Entity
         }
 
         /// <summary>
-        /// Get cylinder base plane indexes by indexes of faces of cylinder inside detail faces collection
+        /// Получить индексы базовой плоскости цилиндра по индексам граней цилиндра внутри коллекции граней деталей
         /// </summary>
         /// ksFaceDefinition.IsCylinder () определяет, является ли грань цилиндрической или нет,
         /// это кажется нелогичным, но в любом случае: базовые плоскости НЕ являются цилиндрическими,
         /// они просто плоские круги
-        /// <param name="_doc3DPart">Document 3D part, represents detail</param>
+        /// <param name="_doc3DPart">Document 3D part, представляет деталь</param>
         /// <param name="startIndex">Start index of faces in faces collection</param>
         /// <param name="endIndex">End index of faces in faces collection</param>
         /// <param name="outFirstIndex">First base plane index</param>

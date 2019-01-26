@@ -3,7 +3,7 @@
     /// <summary>
     /// Build manager interface
     /// </summary>
-    interface IManagable
+    interface IBuildable
     {
         /// <summary>
         /// Create detail in Kompas application

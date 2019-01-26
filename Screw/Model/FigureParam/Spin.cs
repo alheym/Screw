@@ -10,7 +10,7 @@ namespace Screw.Model.FigureParam
     /// Spin class.
     /// Presents spin parameters of 2D document.
     /// </summary>
-    class Spin
+   public class Spin
     {
         /// <summary>
         /// Last error code

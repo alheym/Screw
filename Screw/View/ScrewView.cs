@@ -8,6 +8,7 @@ using Screw.Manager;
 using Screw.Validator;
 using Screw.Model;
 
+
 namespace Screw
 {
 
@@ -24,7 +25,7 @@ namespace Screw
         /// <summary>
         /// Figure build manager
         /// </summary>
-        private IManagable _buildManager;
+        private IBuildable _buildManager;
 
         /// <summary>
         /// Figure parameters
@@ -168,19 +169,19 @@ namespace Screw
 		/// <returns>Selected screwdriver type.</returns>
 		private Screwdriver GetSelectedScrewdriverType()
         {
-            if (WithoutHoleRadioButton.Checked == true)
+            if (WithoutHoleRadioButton.Checked)
             {
                 return Screwdriver.WithoutHole;
             }
-            else if (CrossheadScrewdriverRadioButton.Checked == true)
+            else if (CrossheadScrewdriverRadioButton.Checked)
             {
                 return Screwdriver.CrossheadScrewdriver;
             }
-            else if (FlatheadScrewdriverRadioButton.Checked == true)
+            else if (FlatheadScrewdriverRadioButton.Checked)
             {
                 return Screwdriver.FlatheadScrewdriver;
             }
-            else if (RegularPolygonScrewdriverRadioButton.Checked == true)
+            else if (RegularPolygonScrewdriverRadioButton.Checked)
             {
                 return Screwdriver.RegularPolygonScrewdriver;
             }
@@ -247,21 +248,6 @@ namespace Screw
         }
 
         /// <summary>
-        /// Установка стандартных параметров
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Defaults_Click_1(object sender, EventArgs e)
-        {
-            ScrewHatWidth.Text = "33";
-            screwHatInnerDiameter.Text = "5";
-            ScrewBaseSmoothWidth.Text = "10";
-            ScrewBaseThreadWidth.Text = "75";
-            NutHeight.Text = "11";
-            NutThreadDiameter.Text = "7";
-        }
-
-        /// <summary>
         /// Unset Kompas 3D object from controller
         /// </summary>
         /// <param name="sender"></param>
@@ -281,14 +267,21 @@ namespace Screw
             }
         }
 
-        private void FlatheadScrewdriverRadioButton_CheckedChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Установка стандартных параметров
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Defaults_Click(object sender, EventArgs e)
         {
-            
-        }
+            Default parametrs = new Default();
 
-        private void WithoutHoleRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-
+            ScrewHatWidth.Text = parametrs._diameter.ToString();
+            screwHatInnerDiameter.Text = parametrs._slotDepth.ToString();
+            ScrewBaseSmoothWidth.Text = parametrs._smoothPart.ToString();
+            ScrewBaseThreadWidth.Text = parametrs._threadPart.ToString();
+            NutHeight.Text = parametrs._hatHeight.ToString();
+            NutThreadDiameter.Text = parametrs._slotDepth.ToString();
         }
     }
 }

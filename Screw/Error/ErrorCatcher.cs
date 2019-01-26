@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Screw.Error
 {
-    class ErrorCatcher
+   public class ErrorCatcher
     {
         /// <summary>
         /// Показать сообщение об ошибке при построении

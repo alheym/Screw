@@ -50,7 +50,8 @@ namespace Screw.Model.FigureParam
         /// <param name="spinLocationPoint">Spin location point</param>
         /// <param name="diameterSize">Size of diameter of spin</param>
         /// <param name="spinStep">Step of spin</param>
-        public SpinParameters(ksPart document3DPart, ksEntity beginSpinFace, ksEntity endSpinFace, KompasPoint2D spinLocationPoint, double diameterSize, double spinStep)
+        public SpinParameters(ksPart document3DPart, ksEntity beginSpinFace, ksEntity endSpinFace, KompasPoint2D spinLocationPoint,
+            double diameterSize, double spinStep)
         {
             Document3DPart = document3DPart;
             BeginSpinFace = beginSpinFace;

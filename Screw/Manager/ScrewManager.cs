@@ -9,7 +9,7 @@ using Screw.Model;
 
 namespace Screw.Manager
 {
-    class ScrewManager : IManagable
+    class ScrewManager : IBuildable
     {
         /// <summary>
         /// Kompas application
@@ -71,19 +71,19 @@ namespace Screw.Manager
             {
                 ScrewdriverBase builder = null;
 
-                if (ScrewdriverType == Screwdriver.CrossheadScrewdriver)
+                switch (ScrewdriverType)
                 {
-                    builder = new CrossheadScrewdriver(_kompasApp);
+                    case Screwdriver.CrossheadScrewdriver:
+                        builder = new CrossheadScrewdriver(_kompasApp);
+                        break;
+                    case Screwdriver.FlatheadScrewdriver:
+                        builder = new FlatheadScrewdriver(_kompasApp);
+                        break;
+                    case Screwdriver.RegularPolygonScrewdriver:
+                        builder = new RegularPolygonScrewdriver(_kompasApp);
+                        break;
                 }
-                else if (ScrewdriverType == Screwdriver.FlatheadScrewdriver)
-                {
-                    builder = new FlatheadScrewdriver(_kompasApp);
-                }
-                else if (ScrewdriverType == Screwdriver.RegularPolygonScrewdriver)
-                {
-                    builder = new RegularPolygonScrewdriver(_kompasApp);
-                }
-
+              
                 if (builder.LastErrorCode != ErrorCodes.OK)
                 {
                     LastErrorCode = builder.LastErrorCode;
@@ -186,46 +186,6 @@ namespace Screw.Manager
                 return null;
             }
 
-
-
-            ////Create slot
-            //var rectangleSketch = new KompasSketch(_kompasApp.ScrewPart, Obj3dType.o3d_planeYOZ);
-            //if (rectangleSketch.LastErrorCode != ErrorCodes.OK)
-            //{
-            //    LastErrorCode = rectangleSketch.LastErrorCode;
-            //    return null;
-            //}
-
-            //var rectangleSketchEdit = rectangleSketch.BeginEntityEdit();
-            //if (rectangleSketchEdit == null)
-            //{
-            //    LastErrorCode = rectangleSketch.LastErrorCode;
-            //    return null;
-            //}
-
-
-            //var rectanglePoint = new KompasPoint2D(-_kompasApp.Parameters[0], -_kompasApp.Parameters[5] / 2);
-            //var rectangleParam = new RectangleParameter(_kompasApp, _kompasApp.Parameters[0] * 2, _kompasApp.Parameters[5], rectanglePoint);
-            //if (rectangleSketchEdit.ksRectangle(rectangleParam.FigureParam, 0) == 0)
-            //{
-            //    LastErrorCode = ErrorCodes.EntityDefinitionNull;
-            //    return null;
-            //}
-            //rectangleSketch.EndEntityEdit();
-
-            //extrusionParameters = new KompasExtrusionParameters(_kompasApp.ScrewPart, Obj3dType.o3d_cutExtrusion, rectangleSketch.Entity,
-            //    Direction_Type.dtNormal, _kompasApp.Parameters[1] * 0.84);
-            //var rectangleExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity); // m; выдавливание шлица методом вырезания на глубину m
-            //if (rectangleExtrusion.LastErrorCode != ErrorCodes.OK)
-            //{
-            //    LastErrorCode = rectangleExtrusion.LastErrorCode;
-            //    return null;
-            //}
-
-
-
-
-
             return extruded;
         }
 
@@ -239,6 +199,8 @@ namespace Screw.Manager
         /// </returns>
         private ksEntity[] CreateBase(ksEntity basePlaneOfHat)
         {
+            var coef = 0.7;
+            var gostbase = 0.525;
             // 1. Screw base creation
             // 1.1 Screw base entity
             var screwBase = new KompasSketch(_kompasApp.ScrewPart, basePlaneOfHat);
@@ -261,7 +223,9 @@ namespace Screw.Manager
                 LastErrorCode = ErrorCodes.ArgumentNull;
                 return null;
             }
-            if (screwBaseSketchEdit.ksCircle(screwBasePoint.X, screwBasePoint.Y, _kompasApp.Parameters[0] * 0.7 / 2.0, 1) == 0) // Диаметр резьбы составляет 0.7 от диаметра шляпки (0.7 * D) 
+            // Диаметр резьбы составляет 0.7 от диаметра шляпки (0.7 * D)
+            if (screwBaseSketchEdit.ksCircle(screwBasePoint.X, screwBasePoint.Y, _kompasApp.Parameters[0] * coef / 2.0, 1) == 0)
+
             {
                 LastErrorCode = ErrorCodes.Document2DCircleCreatingError;
                 return null;
@@ -269,9 +233,11 @@ namespace Screw.Manager
             screwBase.EndEntityEdit();
 
             // 1.2 Screw base extrusion
-            var extrusionParameters = new KompasExtrusionParameters(_kompasApp.ScrewPart, Obj3dType.o3d_baseExtrusion, screwBase.Entity, 
-                                                                        Direction_Type.dtNormal, _kompasApp.Parameters[2]);
-            var screwBaseExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity); // l; длина гладкой части винта;
+            var extrusionParameters = new KompasExtrusionParameters(_kompasApp.ScrewPart, Obj3dType.o3d_baseExtrusion, screwBase.Entity,
+                Direction_Type.dtNormal, _kompasApp.Parameters[2]);
+            // l; длина гладкой части винта;
+            var screwBaseExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity);
+            
             if (screwBaseExtrusion.LastErrorCode != ErrorCodes.OK)
             {
                 LastErrorCode = screwBaseExtrusion.LastErrorCode;
@@ -287,7 +253,8 @@ namespace Screw.Manager
             }
 
             // 1.3 Screw base carving
-            var screwCarving = new KompasSketch(_kompasApp.ScrewPart, screwBaseExtrusion.ExtrudedEntity); // Last entity in last extrusion
+            // Last entity in last extrusion
+            var screwCarving = new KompasSketch(_kompasApp.ScrewPart, screwBaseExtrusion.ExtrudedEntity); 
             if (screwCarving.LastErrorCode != ErrorCodes.OK)
             {
                 LastErrorCode = screwCarving.LastErrorCode;
@@ -300,8 +267,8 @@ namespace Screw.Manager
                 LastErrorCode = ErrorCodes.ArgumentNull;
                 return null;
             }
-            // Carving is 1/4 of 70 % (i.e. is 0.525) of D
-            if (screwCarvingSketchEdit.ksCircle(0, 0, (_kompasApp.Parameters[0] * 0.525 / 2.0), 1) == 0) // l
+            // основа под резьбу это 1/4 от 70 % (iт.е. это 0.525) 
+            if (screwCarvingSketchEdit.ksCircle(0, 0, (_kompasApp.Parameters[0] * gostbase / 2.0), 1) == 0) // D
             {
                 LastErrorCode = ErrorCodes.Document2DCircleCreatingError;
                 return null;
@@ -309,8 +276,8 @@ namespace Screw.Manager
             screwCarving.EndEntityEdit();
 
             // 1.4 Screw base carving extrusion
-            extrusionParameters = new KompasExtrusionParameters(_kompasApp.ScrewPart, Obj3dType.o3d_baseExtrusion, screwCarving.Entity, 
-                                                                    Direction_Type.dtNormal, _kompasApp.Parameters[3]);
+            extrusionParameters = new KompasExtrusionParameters(_kompasApp.ScrewPart, Obj3dType.o3d_baseExtrusion, screwCarving.Entity,
+                Direction_Type.dtNormal, _kompasApp.Parameters[3]);
             var screwCarvingExtrusion = new KompasExtrusion(extrusionParameters, ExtrusionType.ByEntity);    // b 
             if (screwCarvingExtrusion.LastErrorCode != ErrorCodes.OK)
             {
@@ -335,6 +302,9 @@ namespace Screw.Manager
         /// <returns>true if operation successful; false in case of error</returns>
         private bool CreateThread(ksEntity[] carvingEntities)
         {
+            var coef = 0.7;
+            var gostspin = 0.037;
+
             // 1.5 Screw base thread spin
             // Шаг вращения по российскому ГОСТ равен 0,037 (т.е. 3,7%) высоты вращения
             var spinParameters = new SpinParameters
@@ -343,8 +313,8 @@ namespace Screw.Manager
                 BeginSpinFace = carvingEntities[1],
                 EndSpinFace = carvingEntities[0],
                 SpinLocationPoint = new KompasPoint2D(0, 0),
-                DiameterSize = _kompasApp.Parameters[0] * 0.7, // 0.7 D
-                SpinStep = _kompasApp.Parameters[3] * 0.037 //  0.037 b
+                DiameterSize = _kompasApp.Parameters[0] * coef, // 0.7 D
+                SpinStep = _kompasApp.Parameters[3] * gostspin //  0.037 b
             };
 
             var screwThreadSpin = new Spin(spinParameters);
@@ -380,8 +350,8 @@ namespace Screw.Manager
             // l + b + 3 шаг резьбы - 0.86 * D (потому что часть с 0,16 * D находится в координатах, которые меньше нуля XOZ)
             var endX = _kompasApp.Parameters[2] + _kompasApp.Parameters[3] + _kompasApp.Parameters[4] * 0.86;
 
-            var startY = -(_kompasApp.Parameters[0] * 0.7 / 2.0);   // 0.7 * D
-            var endY = -(3.0 / 4.0 * _kompasApp.Parameters[0] * 0.7) / 2.0;    // 0.7 * D на конце базы
+            var startY = -(_kompasApp.Parameters[0] * coef / 2.0);   // 0.7 * D
+            var endY = -(3.0 / 4.0 * _kompasApp.Parameters[0] * coef) / 2.0;    // 0.7 * D на конце базы
 
             //	Draw triangle: the base of thread. (основание резьбы - треугольник)
             screwThreadEdit.ksLineSeg(endX - step, endY, endX, endY, 1);

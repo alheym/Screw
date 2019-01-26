@@ -53,12 +53,6 @@ namespace Screw.Validator
         /// <summary>
         /// Validate all chain by set of rules
         /// </summary>
-        /// Every property must be checked by set of checking rules:
-        ///	a) H <= m
-        ///	b) l + b <= H
-        ///	c) H1' >= 0.55 W3
-        ///	d) D <= n
-        /// e) b <= l
         /// <returns>true if validation successful; false if error is caused while validation</returns>
         public bool Validate()
         {
@@ -75,7 +69,8 @@ namespace Screw.Validator
             if (!( _figureParameters[1]<=screwHatHeight))
             {
                 diapasonStart = screwHatHeight;
-                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение глубины шлица m не должно быть больше или равно значению высоты шляпки H", diapasonStart);
+                errorMessage = string.Format(CultureInfo.InvariantCulture, "Значение глубины шлица m не должно быть больше или равно значению высоты шляпки H",
+                    diapasonStart);
                 ErrorList.Add(errorMessage);
             }
             // b) l + b <= H 
